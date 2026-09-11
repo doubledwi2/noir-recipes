@@ -1,11 +1,13 @@
-import React, { useMemo, useRef, useEffect } from 'react';
-import { Animated, SectionList, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { SectionList, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RECIPES } from '../data/recipes';
+import { INGREDIENT_MAP } from '../data/ingredients';
 import type { Recipe } from '../types';
-import { colors, shadows } from '../theme/colors';
-import { radius, spacing, typography } from '../theme/spacing';
+import { colors } from '../theme/colors';
+import { spacing, typography } from '../theme/spacing';
 import { RecipeCard } from '../components/RecipeCard';
+import { ScreenHeader } from '../components/ScreenHeader';
 import { EmptyState } from '../components/EmptyState';
 import { useFavorites } from '../context/FavoritesContext';
 import { useMyBar } from '../context/MyBarContext';
@@ -17,7 +19,7 @@ interface Section {
   kind: 'canMake' | 'almost';
   title: string;
   subtitle: string;
-  data: { recipe: Recipe; missingCount: number }[];
+  data: { recipe: Recipe; missingIngredientIds: string[] }[];
 }
 
 export function CanMakeScreen() {
@@ -25,25 +27,19 @@ export function CanMakeScreen() {
   const { ownedIngredientIds } = useMyBar();
   const { isFavorite, toggleFavorite } = useFavorites();
   const openRecipe = useOpenRecipe();
-  const { strings } = useI18n();
-
-  const headerFade = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(headerFade, { toValue: 1, duration: 500, useNativeDriver: true }).start();
-  }, []);
+  const { t, strings } = useI18n();
 
   const sections = useMemo<Section[]>(() => {
     const matches = getRecipeMatches(RECIPES, ownedIngredientIds);
 
     const canMake = matches
       .filter((m) => m.canMake)
-      .map((m) => ({ recipe: m.recipe, missingCount: 0 }));
+      .map((m) => ({ recipe: m.recipe, missingIngredientIds: [] as string[] }));
 
     const almost = matches
       .filter((m) => !m.canMake && m.missingIngredientIds.length <= ALMOST_THERE_MAX_MISSING)
       .sort((a, b) => a.missingIngredientIds.length - b.missingIngredientIds.length)
-      .map((m) => ({ recipe: m.recipe, missingCount: m.missingIngredientIds.length }));
+      .map((m) => ({ recipe: m.recipe, missingIngredientIds: m.missingIngredientIds }));
 
     const result: Section[] = [];
     if (canMake.length > 0) {
@@ -69,34 +65,49 @@ export function CanMakeScreen() {
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
-      <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <Text style={styles.title}>{strings.canMake.title}</Text>
-        <Text style={styles.tagline}>{strings.canMake.tagline}</Text>
-      </Animated.View>
-
       <SectionList
         sections={sections}
         keyExtractor={(item) => item.recipe.id}
         contentContainerStyle={styles.listContent}
         stickySectionHeadersEnabled={false}
-        renderSectionHeader={({ section }) => (
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionIndicator} />
-            <View>
-              <Text style={styles.sectionTitle}>{(section as Section).title}</Text>
-              <Text style={styles.sectionSubtitle}>{(section as Section).subtitle}</Text>
-            </View>
-          </View>
-        )}
-        renderItem={({ item }) => (
-          <RecipeCard
-            recipe={item.recipe}
-            isFavorite={isFavorite(item.recipe.id)}
-            onPress={() => openRecipe(item.recipe.id)}
-            onToggleFavorite={() => toggleFavorite(item.recipe.id)}
-            note={item.missingCount === 0 ? strings.canMake.complete : strings.canMake.missingBadge(item.missingCount)}
+        ListHeaderComponent={
+          <ScreenHeader
+            eyebrow={strings.canMake.eyebrow}
+            title={strings.canMake.title}
+            subtitle={strings.canMake.tagline}
           />
+        }
+        renderSectionHeader={({ section }) => (
+          <Text style={styles.sectionTitle}>{(section as Section).title}</Text>
         )}
+        renderItem={({ item }) => {
+          const missingNames = item.missingIngredientIds
+            .map((id) => {
+              const ingredient = INGREDIENT_MAP[id];
+              return ingredient ? t(ingredient.name) : id;
+            })
+            .join(', ');
+          return (
+            <View>
+              <RecipeCard
+                recipe={item.recipe}
+                isFavorite={isFavorite(item.recipe.id)}
+                onPress={() => openRecipe(item.recipe.id)}
+                onToggleFavorite={() => toggleFavorite(item.recipe.id)}
+                note={
+                  item.missingIngredientIds.length === 0
+                    ? strings.canMake.complete
+                    : strings.canMake.missingBadge(item.missingIngredientIds.length)
+                }
+              />
+              {missingNames ? (
+                <Text style={styles.missingText}>
+                  {strings.canMake.missingLabel}: {missingNames}
+                </Text>
+              ) : null}
+            </View>
+          );
+        }}
         ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
         SectionSeparatorComponent={() => <View style={{ height: spacing.xl }} />}
         ListEmptyComponent={
@@ -110,6 +121,7 @@ export function CanMakeScreen() {
                 ? strings.canMake.emptySubtitleHasIngredients
                 : strings.canMake.emptySubtitleNoIngredients
             }
+            dashed
           />
         }
         showsVerticalScrollIndicator={false}
@@ -120,31 +132,19 @@ export function CanMakeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  header: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.lg,
+  listContent: { paddingHorizontal: spacing.screen, paddingBottom: spacing.xxxl, flexGrow: 1 },
+  sectionTitle: {
+    ...typography.h2,
+    color: colors.textPrimary,
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
   },
-  title: { ...typography.h1, color: colors.textPrimary },
-  tagline: { color: colors.textSecondary, marginTop: spacing.xs, fontSize: 13 },
-  listContent: { padding: spacing.lg, paddingBottom: spacing.xxxl, flexGrow: 1 },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-    borderWidth: 1,
-    borderColor: colors.borderSubtle,
+  missingText: {
+    ...typography.caption,
+    color: colors.textMuted,
+    letterSpacing: 0,
+    marginTop: -spacing.xs,
+    marginBottom: spacing.xs,
+    marginLeft: spacing.xs,
   },
-  sectionIndicator: {
-    width: 4,
-    height: 32,
-    borderRadius: 2,
-    backgroundColor: colors.gold,
-  },
-  sectionTitle: { ...typography.bodyStrong, color: colors.textPrimary, fontSize: 14 },
-  sectionSubtitle: { color: colors.textMuted, fontSize: 11, marginTop: 1 },
 });

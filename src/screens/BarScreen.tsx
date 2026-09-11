@@ -80,7 +80,7 @@ export function BarScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   listContent: {
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.screen,
     paddingBottom: spacing.xxxl,
   },
   cta: {
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.goldOverlay15,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.screen,
     paddingVertical: spacing.md,
   },
   ctaText: { ...typography.bodyStrong, color: colors.gold },

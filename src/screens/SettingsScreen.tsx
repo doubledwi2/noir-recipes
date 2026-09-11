@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import type { Locale } from '../types';
 import { colors, shadows } from '../theme/colors';
 import { radius, spacing, typography } from '../theme/spacing';
 import { ScreenHeader } from '../components/ScreenHeader';
+import { BrandLogo } from '../components/BrandLogo';
 import { useI18n } from '../i18n/useI18n';
 
-const LOCALE_OPTIONS: { value: Locale; flag: string; label: string }[] = [
-  { value: 'id', flag: '🇮🇩', label: 'Bahasa Indonesia' },
-  { value: 'en', flag: '🇬🇧', label: 'English' },
+const LOCALE_OPTIONS: { value: Locale; badge: string }[] = [
+  { value: 'id', badge: 'ID' },
+  { value: 'en', badge: 'EN' },
 ];
 
 export function SettingsScreen() {
@@ -53,11 +54,11 @@ export function SettingsScreen() {
                 accessibilityRole="radio"
                 accessibilityState={{ selected }}
               >
-                <Text style={styles.optionFlag}>{option.flag}</Text>
-                <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>{label}</Text>
-                <View style={[styles.radio, selected && styles.radioSelected]}>
-                  {selected && <View style={styles.radioDot} />}
+                <View style={[styles.badge, selected && styles.badgeSelected]}>
+                  <Text style={[styles.badgeText, selected && styles.badgeTextSelected]}>{option.badge}</Text>
                 </View>
+                <Text style={[styles.optionLabel, selected && styles.optionLabelSelected]}>{label}</Text>
+                {selected ? <Ionicons name="checkmark" size={20} color={colors.gold} /> : null}
               </TouchableOpacity>
             );
           })}
@@ -68,7 +69,7 @@ export function SettingsScreen() {
       <View style={styles.proSection}>
         <View style={styles.proHeadRow}>
           <View style={styles.proIconWrap}>
-            <Ionicons name="ribbon-outline" size={20} color={colors.gold} />
+            <MaterialCommunityIcons name="crown-outline" size={20} color={colors.gold} />
           </View>
           <View style={styles.proTextWrap}>
             <Text style={styles.proTitle}>{strings.settings.proTitle}</Text>
@@ -96,7 +97,7 @@ export function SettingsScreen() {
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Noir D Mix</Text>
+        <BrandLogo width={140} />
         <Text style={styles.footerSubtext}>Cocktail Recipe Catalog</Text>
       </View>
     </ScrollView>
@@ -105,7 +106,7 @@ export function SettingsScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxxl },
+  content: { paddingHorizontal: spacing.screen, paddingBottom: spacing.xxxl },
   section: { marginTop: spacing.xl },
   sectionHeadRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   sectionLabel: { ...typography.h2, color: colors.textPrimary },
@@ -128,19 +129,20 @@ const styles = StyleSheet.create({
     ...shadows.goldGlow,
   },
   optionFlag: { fontSize: 20 },
-  optionLabel: { flex: 1, ...typography.bodyStrong, color: colors.textSecondary },
-  optionLabelSelected: { color: colors.textPrimary },
-  radio: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 2,
-    borderColor: colors.border,
+  badge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.surfaceAlt,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  badgeSelected: { backgroundColor: colors.gold },
+  badgeText: { ...typography.small, color: colors.textSecondary, letterSpacing: 0.5 },
+  badgeTextSelected: { color: colors.primaryForeground },
+  optionLabel: { flex: 1, ...typography.bodyStrong, color: colors.textSecondary },
+  optionLabelSelected: { color: colors.textPrimary },
   radioSelected: { borderColor: colors.gold },
-  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.gold },
   proSection: {
     marginTop: spacing.xxl,
     paddingTop: spacing.xl,

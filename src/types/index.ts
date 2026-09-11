@@ -53,6 +53,9 @@ export interface RecipeIngredient {
 export interface Recipe {
   id: string;
   title: LocalizedText;
+  // Optional one-line description shown under the title on the recipe card
+  // and detail screen. Not every recipe has one yet -- render conditionally.
+  tagline?: LocalizedText;
   category: RecipeCategory;
   tags: LocalizedText[];
   glassType: GlassTypeId;

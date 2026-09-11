@@ -6,6 +6,9 @@ export const spacing = {
   xl: 24,
   xxl: 32,
   xxxl: 48,
+  // Screen-edge horizontal padding -- exact match to Lovable's `px-5` (20px),
+  // distinct from `lg` (16px) which is used for internal card padding.
+  screen: 20,
 } as const;
 
 // Radius scale -- exact match to the design's --radius: 0.875rem (14px) base

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.surface,
     borderRadius: radius.pill,
-    borderWidth: 1.5,
+    borderWidth: 1,
     paddingHorizontal: spacing.lg,
     height: 48,
     gap: spacing.md,
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     color: colors.textPrimary,
-    fontSize: 15,
+    fontSize: 14,
     height: '100%',
     fontWeight: '500',
   },

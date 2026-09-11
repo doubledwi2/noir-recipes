@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { RECIPE_MAP } from '../data/recipes';
 import { INGREDIENT_MAP } from '../data/ingredients';
@@ -19,6 +20,7 @@ import { useI18n } from '../i18n/useI18n';
 // may still carry a `videoUrl` field -- it's just not rendered anymore.
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const recipe = RECIPE_MAP[recipeId];
+  const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { hasIngredient } = useMyBar();
   const { t, strings } = useI18n();
@@ -63,18 +65,14 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
       showsVerticalScrollIndicator={false}
     >
       <Animated.View style={{ opacity: contentFade, transform: [{ translateY: contentSlide }] }}>
+        <Pressable onPress={() => router.back()} hitSlop={8} style={styles.backRow}>
+          <Ionicons name="arrow-back" size={18} color={colors.textSecondary} />
+          <Text style={styles.backLabel}>{strings.detail.backLabel}</Text>
+        </Pressable>
+
         <Text style={styles.category}>{t(CATEGORY_LABELS[recipe.category]).toUpperCase()}</Text>
         <Text style={styles.title}>{t(recipe.title)}</Text>
-
-        {recipe.tags.length > 0 && (
-          <View style={styles.tagsRow}>
-            {recipe.tags.map((tag) => (
-              <View key={tag.id} style={styles.tag}>
-                <Text style={styles.tagText}>#{t(tag)}</Text>
-              </View>
-            ))}
-          </View>
-        )}
+        {recipe.tagline ? <Text style={styles.tagline}>{t(recipe.tagline)}</Text> : null}
 
         {/* 3-stat grid: glass / difficulty / time -- exact match to Lovable */}
         <View style={styles.statsRow}>
@@ -168,19 +166,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  content: { paddingHorizontal: spacing.lg, paddingTop: spacing.xxxl, paddingBottom: spacing.xxxl },
+  content: { paddingHorizontal: spacing.screen, paddingTop: spacing.xxxl, paddingBottom: spacing.xxxl },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs + 2, marginBottom: spacing.md },
+  backLabel: { ...typography.body, color: colors.textSecondary },
   category: { ...typography.goldLabel, color: colors.gold, opacity: 0.8 },
   title: { ...typography.display, color: colors.textPrimary, marginTop: spacing.xs + 2 },
-  tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.md },
-  tag: {
-    backgroundColor: colors.surfaceAlt,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 1,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  tagText: { color: colors.textMuted, fontSize: 11, fontWeight: '600' },
+  tagline: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xs + 2 },
   statsRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg },
   statBox: {
     flex: 1,

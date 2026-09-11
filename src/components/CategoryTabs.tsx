@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
-import { Animated, Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import React from 'react';
+import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
 import { colors, shadows } from '../theme/colors';
-import { radius, spacing, typography } from '../theme/spacing';
+import { radius, spacing } from '../theme/spacing';
 
 interface Props<T extends string> {
   options: readonly T[];
@@ -11,6 +11,12 @@ interface Props<T extends string> {
   onChange: (value: T | null) => void;
 }
 
+// Simplified on purpose: no per-chip mount animation (that was likely
+// causing the "chips render empty until you tap one" layout glitch on
+// Android -- native+JS driven Animated values fighting the ScrollView's
+// first measure pass). Selection state alone drives style, matching
+// Lovable exactly: unselected = plain outline, selected = gold border +
+// 15%-gold fill + glow, no scale/opacity animation.
 export function CategoryTabs<T extends string>({ options, getLabel, allLabel, value, onChange }: Props<T>) {
   return (
     <ScrollView
@@ -27,75 +33,40 @@ export function CategoryTabs<T extends string>({ options, getLabel, allLabel, va
 }
 
 function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
-  const scaleAnim = useRef(new Animated.Value(selected ? 1 : 0.95)).current;
-  const glowAnim = useRef(new Animated.Value(selected ? 1 : 0)).current;
-
-  React.useEffect(() => {
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: selected ? 1.05 : 0.95,
-        friction: 6,
-        tension: 80,
-        useNativeDriver: true,
-      }),
-      Animated.timing(glowAnim, {
-        toValue: selected ? 1 : 0,
-        duration: 250,
-        useNativeDriver: false,
-      }),
-    ]).start();
-  }, [selected]);
-
-  const glowColor = glowAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 0.35],
-  });
-
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-      <Pressable
-        onPress={onPress}
-        style={({ pressed }) => [
-          styles.chip,
-          selected && styles.chipSelected,
-          pressed && { opacity: 0.85 },
-        ]}
-      >
-        {selected && <Animated.View style={[StyleSheet.absoluteFill, styles.chipGlow, { opacity: glowColor }]} />}
-        <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{label}</Text>
-      </Pressable>
-    </Animated.View>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.chip,
+        selected && styles.chipSelected,
+        pressed && { opacity: 0.85 },
+      ]}
+    >
+      <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{label}</Text>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.sm, paddingHorizontal: spacing.lg, paddingVertical: spacing.xs },
+  container: { gap: spacing.sm, paddingHorizontal: spacing.screen, paddingVertical: spacing.xs },
   chip: {
-    position: 'relative',
-    paddingHorizontal: spacing.xl,
-    paddingVertical: spacing.sm + 2,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.sm,
     borderRadius: radius.pill,
-    backgroundColor: colors.surface,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.border,
-    overflow: 'hidden',
   },
   chipSelected: {
     backgroundColor: colors.goldOverlay15,
     borderColor: colors.gold,
     ...shadows.goldGlow,
   },
-  chipGlow: {
-    backgroundColor: colors.gold,
-    borderRadius: radius.pill,
-  },
   chipText: {
-    ...typography.caption,
+    fontSize: 12,
+    fontWeight: '500',
     color: colors.textSecondary,
-    letterSpacing: 0,
   },
   chipTextSelected: {
     color: colors.gold,
-    fontWeight: '600',
   },
 });

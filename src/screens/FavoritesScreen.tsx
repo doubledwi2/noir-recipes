@@ -75,7 +75,7 @@ export function FavoritesScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   listContent: {
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.screen,
     paddingBottom: spacing.xxxl,
     flexGrow: 1,
   },

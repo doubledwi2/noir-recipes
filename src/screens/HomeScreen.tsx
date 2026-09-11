@@ -1,22 +1,25 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { Animated, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RECIPES, CATEGORIES } from '../data/recipes';
 import type { RecipeCategory } from '../types';
 import { colors } from '../theme/colors';
-import { radius, spacing, typography } from '../theme/spacing';
+import { spacing, typography } from '../theme/spacing';
 import { SearchBar } from '../components/SearchBar';
 import { CategoryTabs } from '../components/CategoryTabs';
 import { RecipeCard } from '../components/RecipeCard';
 import { EmptyState } from '../components/EmptyState';
-import { BannerSlot } from '../ads/BannerSlot';
+import { BrandLogo } from '../components/BrandLogo';
 import { useFavorites } from '../context/FavoritesContext';
 import { useOpenRecipe } from '../ads/InterstitialProvider';
 import { recipeMatchesQuery } from '../utils/search';
 import { CATEGORY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
 
+// Ad banner is now rendered once, globally, floating above the tab bar
+// on every screen -- see app/(tabs)/_layout.tsx. Don't add <BannerSlot />
+// here again or it'll show twice.
 export function HomeScreen() {
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
@@ -41,11 +44,7 @@ export function HomeScreen() {
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <Image
-          source={require('../assets/noirdmix-logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <BrandLogo />
         <Text style={styles.subtitle}>{strings.home.tagline}</Text>
         <LinearGradient
           colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
@@ -66,8 +65,6 @@ export function HomeScreen() {
         value={category}
         onChange={setCategory}
       />
-
-      <BannerSlot />
 
       <FlatList
         data={filteredRecipes}
@@ -94,16 +91,10 @@ export function HomeScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   header: {
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.screen,
     paddingTop: spacing.xl,
     paddingBottom: spacing.sm,
     alignItems: 'center',
-  },
-  logo: { width: 220, height: 64 },
-  brand: {
-    ...typography.display,
-    color: colors.textPrimary,
-    textAlign: 'center',
   },
   subtitle: {
     ...typography.caption,
@@ -118,12 +109,13 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   searchWrap: {
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.screen,
     marginTop: spacing.md,
     marginBottom: spacing.sm,
   },
   listContent: {
-    padding: spacing.lg,
+    paddingHorizontal: spacing.screen,
+    paddingTop: spacing.lg,
     paddingBottom: spacing.xxxl,
     flexGrow: 1,
   },

@@ -4,6 +4,8 @@ export interface Strings {
   common: {
     all: string;
     minutesLabel: (n: number) => string;
+    adLabel: string;
+    adPlaceholder: string;
   };
   tabs: {
     home: string;
@@ -41,6 +43,7 @@ export interface Strings {
     canMakeSectionSubtitle: string;
     almostSectionTitle: string;
     almostSectionSubtitle: string;
+    missingLabel: string;
     missingBadge: (n: number) => string;
     complete: string;
     emptyTitleHasIngredients: string;
@@ -49,6 +52,7 @@ export interface Strings {
     emptySubtitleNoIngredients: string;
   };
   detail: {
+    backLabel: string;
     ingredientsTitle: string;
     stepsTitle: string;
     notesTitle: string;
@@ -80,6 +84,8 @@ export const UI_STRINGS: Record<Locale, Strings> = {
     common: {
       all: 'Semua',
       minutesLabel: (n) => `${n} menit`,
+      adLabel: 'IKLAN',
+      adPlaceholder: 'Slot iklan kamu di sini',
     },
     tabs: {
       home: 'Resep',
@@ -97,7 +103,7 @@ export const UI_STRINGS: Record<Locale, Strings> = {
     },
     favorites: {
       eyebrow: 'Koleksi Pribadi',
-      title: 'Favorit',
+      title: 'Favorit kamu',
       tagline: (n) => `${n} resep tersimpan di rak kamu.`,
       emptyTitle: 'Rak masih kosong',
       emptySubtitle: 'Ketuk ikon hati di resep mana pun untuk menyimpannya di sini.',
@@ -117,6 +123,7 @@ export const UI_STRINGS: Record<Locale, Strings> = {
       canMakeSectionSubtitle: 'Semua bahan sudah ada di Bar Saya',
       almostSectionTitle: 'Hampir Bisa Dibuat',
       almostSectionSubtitle: 'Tinggal 1-2 bahan lagi',
+      missingLabel: 'Butuh',
       missingBadge: (n) => `Kurang ${n} bahan`,
       complete: 'Lengkap',
       emptyTitleHasIngredients: 'Belum ada resep yang cocok',
@@ -125,6 +132,7 @@ export const UI_STRINGS: Record<Locale, Strings> = {
       emptySubtitleNoIngredients: 'Buka tab Bar Saya dan tandai bahan yang kamu punya untuk melihat resep yang bisa dibuat.',
     },
     detail: {
+      backLabel: 'Kembali',
       ingredientsTitle: 'Bahan',
       stepsTitle: 'Cara Membuat',
       notesTitle: 'Catatan',
@@ -154,6 +162,8 @@ export const UI_STRINGS: Record<Locale, Strings> = {
     common: {
       all: 'All',
       minutesLabel: (n) => `${n} min`,
+      adLabel: 'AD',
+      adPlaceholder: 'Your ad slot goes here',
     },
     tabs: {
       home: 'Recipes',
@@ -191,6 +201,7 @@ export const UI_STRINGS: Record<Locale, Strings> = {
       canMakeSectionSubtitle: 'All ingredients are already in My Bar',
       almostSectionTitle: 'Almost There',
       almostSectionSubtitle: 'Just 1-2 ingredients away',
+      missingLabel: 'Need',
       missingBadge: (n) => (n === 1 ? '1 missing' : `${n} missing`),
       complete: 'Complete',
       emptyTitleHasIngredients: 'No matching recipes yet',
@@ -199,6 +210,7 @@ export const UI_STRINGS: Record<Locale, Strings> = {
       emptySubtitleNoIngredients: 'Open the My Bar tab and mark the ingredients you have to see what you can make.',
     },
     detail: {
+      backLabel: 'Back',
       ingredientsTitle: 'Ingredients',
       stepsTitle: 'Instructions',
       notesTitle: 'Note',
