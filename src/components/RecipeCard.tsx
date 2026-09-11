@@ -53,6 +53,11 @@ export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note
             <Text style={styles.title} numberOfLines={2}>
               {t(recipe.title)}
             </Text>
+            {recipe.tagline ? (
+              <Text style={styles.tagline} numberOfLines={1}>
+                {t(recipe.tagline)}
+              </Text>
+            ) : null}
           </View>
           <Pressable
             onPress={onToggleFavorite}
@@ -117,6 +122,12 @@ const styles = StyleSheet.create({
     ...typography.h2,
     color: colors.textPrimary,
     marginTop: 4,
+  },
+  tagline: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    marginTop: 2,
+    letterSpacing: 0,
   },
   favoriteButton: {
     width: 32,

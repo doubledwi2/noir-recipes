@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, shadows } from '../theme/colors';
-import { radius, spacing } from '../theme/spacing';
+import { colors } from '../theme/colors';
+import { spacing, typography } from '../theme/spacing';
 
 interface Props {
   name: string;
@@ -9,16 +9,13 @@ interface Props {
   owned: boolean;
 }
 
+// Exact match to Lovable: a small filled dot (gold when owned, muted grey
+// when not) -- not a checkmark-in-circle. Row has no background tint,
+// separated by hairline dividers (handled by the parent list).
 export function IngredientRow({ name, amount, owned }: Props) {
   return (
-    <View style={[styles.row, owned && styles.rowOwned]}>
-      <View style={[styles.check, owned && styles.checkOwned]}>
-        {owned ? (
-          <Text style={styles.checkText}>✓</Text>
-        ) : (
-          <View style={styles.checkEmpty} />
-        )}
-      </View>
+    <View style={styles.row}>
+      <View style={[styles.dot, owned && styles.dotOwned]} />
       <Text style={[styles.name, owned && styles.nameOwned]} numberOfLines={1}>
         {name}
       </Text>
@@ -31,40 +28,19 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: spacing.sm + 2,
-    paddingHorizontal: spacing.sm,
-    gap: spacing.md,
-    borderRadius: radius.sm,
-    marginHorizontal: -spacing.sm,
+    paddingVertical: spacing.md,
+    gap: spacing.sm + 2,
   },
-  rowOwned: {
-    backgroundColor: `${colors.gold}08`,
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.textMuted,
   },
-  check: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
+  dotOwned: {
+    backgroundColor: colors.gold,
   },
-  checkOwned: {
-    borderColor: colors.gold,
-    backgroundColor: `${colors.gold}20`,
-  },
-  checkText: {
-    color: colors.gold,
-    fontSize: 11,
-    fontWeight: '800',
-  },
-  checkEmpty: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.border,
-  },
-  name: { flex: 1, color: colors.textPrimary, fontSize: 14, fontWeight: '600' },
-  nameOwned: { color: colors.goldLight },
-  amount: { color: colors.textSecondary, fontSize: 12, fontWeight: '500' },
+  name: { flex: 1, ...typography.body, color: colors.textSecondary, fontWeight: '600' },
+  nameOwned: { color: colors.textPrimary },
+  amount: { ...typography.caption, color: colors.gold, letterSpacing: 0 },
 });

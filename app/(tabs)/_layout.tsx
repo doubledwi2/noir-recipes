@@ -1,16 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Tabs } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { colors, shadows } from '../../src/theme/colors';
 import { radius, spacing } from '../../src/theme/spacing';
 import { useI18n } from '../../src/i18n/useI18n';
 
-const TAB_ICONS: Record<string, { active: string; inactive: string }> = {
-  index: { active: '🍸', inactive: '🍸' },
-  'can-make': { active: '✨', inactive: '✨' },
-  bar: { active: '🧊', inactive: '🧊' },
-  favorites: { active: '❤️', inactive: '🤍' },
-  settings: { active: '⚙️', inactive: '⚙️' },
+const TAB_ICONS: Record<string, { active: keyof typeof Ionicons.glyphMap; inactive: keyof typeof Ionicons.glyphMap }> = {
+  index: { active: 'wine', inactive: 'wine-outline' },
+  'can-make': { active: 'sparkles', inactive: 'sparkles-outline' },
+  bar: { active: 'cube', inactive: 'cube-outline' },
+  favorites: { active: 'heart', inactive: 'heart-outline' },
+  settings: { active: 'settings', inactive: 'settings-outline' },
 };
 
 export default function TabsLayout() {
@@ -25,11 +26,11 @@ export default function TabsLayout() {
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabLabel,
         tabBarItemStyle: styles.tabItem,
-        tabBarIcon: ({ focused }) => {
+        tabBarIcon: ({ focused, color }) => {
           const iconSet = TAB_ICONS[route.name] ?? TAB_ICONS.index;
           return (
             <View style={[styles.iconWrap, focused && styles.iconWrapActive]}>
-              <Text style={styles.tabIcon}>{focused ? iconSet.active : iconSet.inactive}</Text>
+              <Ionicons name={focused ? iconSet.active : iconSet.inactive} size={20} color={color} />
             </View>
           );
         },
@@ -73,8 +74,5 @@ const styles = StyleSheet.create({
   },
   iconWrapActive: {
     backgroundColor: colors.goldGlow,
-  },
-  tabIcon: {
-    fontSize: 18,
   },
 });

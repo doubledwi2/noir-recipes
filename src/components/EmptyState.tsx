@@ -7,9 +7,11 @@ interface Props {
   emoji: string;
   title: string;
   subtitle?: string;
+  /** Dashed-border container variant (matches Lovable's "Siap diracik" empty state). */
+  dashed?: boolean;
 }
 
-export function EmptyState({ emoji, title, subtitle }: Props) {
+export function EmptyState({ emoji, title, subtitle, dashed }: Props) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.85)).current;
 
@@ -21,7 +23,13 @@ export function EmptyState({ emoji, title, subtitle }: Props) {
   }, []);
 
   return (
-    <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+    <Animated.View
+      style={[
+        styles.container,
+        dashed && styles.containerDashed,
+        { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
+      ]}
+    >
       <View style={styles.emojiWrap}>
         <Text style={styles.emoji}>{emoji}</Text>
       </View>
@@ -39,6 +47,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xxl,
     gap: spacing.md,
     paddingVertical: spacing.xxxl,
+  },
+  containerDashed: {
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: colors.border,
+    borderRadius: 22,
+    marginVertical: spacing.md,
   },
   emojiWrap: {
     width: 80,
