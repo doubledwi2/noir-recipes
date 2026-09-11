@@ -20,16 +20,21 @@ export interface Strings {
     emptySubtitle: string;
   };
   favorites: {
+    eyebrow: string;
     title: string;
-    tagline: string;
+    tagline: (n: number) => string;
     emptyTitle: string;
     emptySubtitle: string;
+    emptyCta: string;
   };
   bar: {
+    eyebrow: string;
     title: string;
-    tagline: (owned: number, total: number) => string;
+    tagline: (owned: number) => string;
+    cta: string;
   };
   canMake: {
+    eyebrow: string;
     title: string;
     tagline: string;
     canMakeSectionTitle: string;
@@ -37,6 +42,7 @@ export interface Strings {
     almostSectionTitle: string;
     almostSectionSubtitle: string;
     missingBadge: (n: number) => string;
+    complete: string;
     emptyTitleHasIngredients: string;
     emptySubtitleHasIngredients: string;
     emptyTitleNoIngredients: string;
@@ -46,20 +52,26 @@ export interface Strings {
     ingredientsTitle: string;
     stepsTitle: string;
     notesTitle: string;
-    videoTitle: string;
-    watchButton: string;
     notFoundTitle: string;
+    favSave: string;
+    favSaved: string;
   };
   favoriteButton: {
     add: string;
     remove: string;
   };
   settings: {
+    eyebrow: string;
     title: string;
     tagline: string;
     languageSectionTitle: string;
+    languageHint: string;
     idOptionLabel: string;
     enOptionLabel: string;
+    proTitle: string;
+    proBody: string;
+    proCta: string;
+    proNotice: string;
   };
 }
 
@@ -84,46 +96,58 @@ export const UI_STRINGS: Record<Locale, Strings> = {
       emptySubtitle: 'Coba kata kunci lain atau ganti kategori filter.',
     },
     favorites: {
+      eyebrow: 'Koleksi Pribadi',
       title: 'Favorit',
-      tagline: 'Resep yang kamu tandai untuk dicoba lagi',
-      emptyTitle: 'Belum ada favorit',
-      emptySubtitle: 'Ketuk ikon hati di sebuah resep untuk menyimpannya di sini.',
+      tagline: (n) => `${n} resep tersimpan di rak kamu.`,
+      emptyTitle: 'Rak masih kosong',
+      emptySubtitle: 'Ketuk ikon hati di resep mana pun untuk menyimpannya di sini.',
+      emptyCta: 'Jelajahi resep',
     },
     bar: {
+      eyebrow: 'Home Bar',
       title: 'Bar Saya',
-      tagline: (owned, total) => `Tandai bahan yang kamu punya · ${owned}/${total} ditandai`,
+      tagline: (owned) => `${owned} bahan tersedia di rak kamu.`,
+      cta: 'Lihat resep yang bisa dibuat',
     },
     canMake: {
+      eyebrow: 'Dari Rak Kamu',
       title: 'Bisa Dibuat',
       tagline: 'Berdasarkan bahan yang kamu tandai di Bar Saya',
       canMakeSectionTitle: 'Bisa Dibuat Sekarang',
       canMakeSectionSubtitle: 'Semua bahan sudah ada di Bar Saya',
       almostSectionTitle: 'Hampir Bisa Dibuat',
       almostSectionSubtitle: 'Tinggal 1-2 bahan lagi',
-      missingBadge: (n) => `Butuh ${n} bahan lagi`,
+      missingBadge: (n) => `Kurang ${n} bahan`,
+      complete: 'Lengkap',
       emptyTitleHasIngredients: 'Belum ada resep yang cocok',
       emptySubtitleHasIngredients: 'Tandai lebih banyak bahan di Bar Saya supaya lebih banyak resep muncul di sini.',
       emptyTitleNoIngredients: 'Bar Saya masih kosong',
       emptySubtitleNoIngredients: 'Buka tab Bar Saya dan tandai bahan yang kamu punya untuk melihat resep yang bisa dibuat.',
     },
     detail: {
-      ingredientsTitle: 'Bahan-Bahan',
-      stepsTitle: 'Langkah',
+      ingredientsTitle: 'Bahan',
+      stepsTitle: 'Cara Membuat',
       notesTitle: 'Catatan',
-      videoTitle: 'Tutorial Video',
-      watchButton: '▶ Tonton di Noir D Mix',
       notFoundTitle: 'Resep tidak ditemukan',
+      favSave: 'Simpan ke Favorit',
+      favSaved: 'Tersimpan di Favorit',
     },
     favoriteButton: {
       add: 'Tambah ke favorit',
       remove: 'Hapus dari favorit',
     },
     settings: {
+      eyebrow: 'Preferensi',
       title: 'Pengaturan',
-      tagline: 'Atur preferensi tampilan aplikasi',
-      languageSectionTitle: 'Bahasa',
+      tagline: 'Atur pengalaman aplikasi sesuai seleramu.',
+      languageSectionTitle: 'Ubah Bahasa',
+      languageHint: 'Pilih bahasa tampilan aplikasi.',
       idOptionLabel: 'Bahasa Indonesia',
       enOptionLabel: 'English',
+      proTitle: 'Upgrade ke Pro untuk hapus iklan',
+      proBody: 'Nikmati semua resep tanpa gangguan banner iklan.',
+      proCta: 'Upgrade ke Pro',
+      proNotice: 'Pembayaran Pro akan segera tersedia.',
     },
   },
   en: {
@@ -146,23 +170,29 @@ export const UI_STRINGS: Record<Locale, Strings> = {
       emptySubtitle: 'Try a different search term or category filter.',
     },
     favorites: {
+      eyebrow: 'Personal Collection',
       title: 'Favorites',
-      tagline: 'Recipes you saved to try again',
-      emptyTitle: 'No favorites yet',
-      emptySubtitle: 'Tap the heart icon on a recipe to save it here.',
+      tagline: (n) => `${n} recipes saved on your shelf.`,
+      emptyTitle: 'Shelf still empty',
+      emptySubtitle: 'Tap the heart icon on any recipe to save it here.',
+      emptyCta: 'Browse recipes',
     },
     bar: {
+      eyebrow: 'Home Bar',
       title: 'My Bar',
-      tagline: (owned, total) => `Mark the ingredients you have · ${owned}/${total} marked`,
+      tagline: (owned) => `${owned} ingredients available on your shelf.`,
+      cta: 'See recipes you can make',
     },
     canMake: {
+      eyebrow: 'From Your Shelf',
       title: 'Can Make',
       tagline: 'Based on the ingredients you marked in My Bar',
       canMakeSectionTitle: 'Can Make Right Now',
       canMakeSectionSubtitle: 'All ingredients are already in My Bar',
       almostSectionTitle: 'Almost There',
       almostSectionSubtitle: 'Just 1-2 ingredients away',
-      missingBadge: (n) => (n === 1 ? 'Need 1 more ingredient' : `Need ${n} more ingredients`),
+      missingBadge: (n) => (n === 1 ? '1 missing' : `${n} missing`),
+      complete: 'Complete',
       emptyTitleHasIngredients: 'No matching recipes yet',
       emptySubtitleHasIngredients: 'Mark more ingredients in My Bar to see more recipes here.',
       emptyTitleNoIngredients: 'My Bar is empty',
@@ -170,22 +200,28 @@ export const UI_STRINGS: Record<Locale, Strings> = {
     },
     detail: {
       ingredientsTitle: 'Ingredients',
-      stepsTitle: 'Steps',
+      stepsTitle: 'Instructions',
       notesTitle: 'Note',
-      videoTitle: 'Video Tutorial',
-      watchButton: '▶ Watch on Noir D Mix',
       notFoundTitle: 'Recipe not found',
+      favSave: 'Save to Favorites',
+      favSaved: 'Saved to Favorites',
     },
     favoriteButton: {
       add: 'Add to favorites',
       remove: 'Remove from favorites',
     },
     settings: {
+      eyebrow: 'Preferences',
       title: 'Settings',
-      tagline: 'Manage your app display preferences',
-      languageSectionTitle: 'Language',
+      tagline: 'Tune the app experience to your taste.',
+      languageSectionTitle: 'Change Language',
+      languageHint: 'Choose the app display language.',
       idOptionLabel: 'Bahasa Indonesia',
       enOptionLabel: 'English',
+      proTitle: 'Upgrade to Pro to remove ads',
+      proBody: 'Enjoy every recipe without ad banner interruptions.',
+      proCta: 'Upgrade to Pro',
+      proNotice: 'Pro payments will be available soon.',
     },
   },
 };

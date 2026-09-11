@@ -81,21 +81,21 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   chipSelected: {
-    backgroundColor: colors.gold,
-    borderColor: colors.goldLight,
+    backgroundColor: colors.goldOverlay15,
+    borderColor: colors.gold,
     ...shadows.goldGlow,
   },
   chipGlow: {
-    backgroundColor: colors.goldLight,
+    backgroundColor: colors.gold,
     borderRadius: radius.pill,
   },
   chipText: {
+    ...typography.caption,
     color: colors.textSecondary,
-    fontSize: 13,
-    fontWeight: '700',
-    letterSpacing: 0.3,
+    letterSpacing: 0,
   },
   chipTextSelected: {
-    color: colors.bg,
+    color: colors.gold,
+    fontWeight: '600',
   },
 });

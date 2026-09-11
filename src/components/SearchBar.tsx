@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Animated, StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors, shadows } from '../theme/colors';
 import { radius, spacing } from '../theme/spacing';
 
@@ -31,7 +32,7 @@ export function SearchBar({ value, onChangeText, placeholder }: Props) {
 
   return (
     <Animated.View style={[styles.container, { borderColor }, { shadowColor: colors.gold, shadowOpacity: glowOpacity, shadowRadius: 12 }]}>
-      <Text style={styles.icon}>🔎</Text>
+      <Ionicons name="search" size={16} color={colors.textSecondary} style={styles.icon} />
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -61,14 +62,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: radius.lg,
+    borderRadius: radius.pill,
     borderWidth: 1.5,
     paddingHorizontal: spacing.lg,
     height: 48,
     gap: spacing.md,
     ...shadows.subtle,
   },
-  icon: { fontSize: 15, opacity: 0.7 },
+  icon: {},
   input: {
     flex: 1,
     color: colors.textPrimary,

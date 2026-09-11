@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
-import { colors } from '../theme/colors';
+import { colors, shadows } from '../theme/colors';
 import { spacing, typography } from '../theme/spacing';
 
 interface Props {
@@ -48,8 +48,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
+    borderColor: colors.goldOverlay15,
     marginBottom: spacing.sm,
+    ...shadows.goldGlow,
   },
   emoji: { fontSize: 36 },
   title: {

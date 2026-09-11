@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
+import { Animated, FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RECIPES, CATEGORIES } from '../data/recipes';
@@ -40,22 +40,19 @@ export function HomeScreen() {
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
-      {/* Premium gradient header background */}
-      <LinearGradient
-        colors={[`${colors.gold}0A`, 'transparent']}
-        style={styles.headerGradient}
-      />
-
       <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <View style={styles.brandRow}>
-          <View>
-            <Text style={styles.brand}>{strings.home.brand}</Text>
-            <View style={styles.taglineWrap}>
-              <View style={styles.goldLine} />
-              <Text style={styles.tagline}>{strings.home.tagline}</Text>
-            </View>
-          </View>
-        </View>
+        <Image
+          source={require('../assets/noirdmix-logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <Text style={styles.subtitle}>{strings.home.tagline}</Text>
+        <LinearGradient
+          colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.divider}
+        />
       </Animated.View>
 
       <View style={styles.searchWrap}>
@@ -96,43 +93,33 @@ export function HomeScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  headerGradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 160,
+  header: {
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.sm,
+    alignItems: 'center',
   },
-  header: { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, paddingBottom: spacing.sm },
-  brandRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
+  logo: { width: 220, height: 64 },
   brand: {
     ...typography.display,
-    color: colors.gold,
-    fontSize: 28,
+    color: colors.textPrimary,
+    textAlign: 'center',
   },
-  taglineWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginTop: spacing.xs + 2,
-  },
-  goldLine: {
-    width: 20,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: colors.gold,
-  },
-  tagline: {
+  subtitle: {
+    ...typography.caption,
     color: colors.textSecondary,
-    fontSize: 13,
-    fontWeight: '500',
+    textAlign: 'center',
+    marginTop: spacing.sm,
+  },
+  divider: {
+    height: 1,
+    width: '100%',
+    marginTop: spacing.md,
+    opacity: 0.5,
   },
   searchWrap: {
     paddingHorizontal: spacing.lg,
+    marginTop: spacing.md,
     marginBottom: spacing.sm,
   },
   listContent: {

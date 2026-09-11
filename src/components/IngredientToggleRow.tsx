@@ -1,7 +1,8 @@
-import React, { useRef, useEffect } from 'react';
-import { Animated, StyleSheet, Switch, Text, View } from 'react-native';
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors, shadows } from '../theme/colors';
-import { radius, spacing } from '../theme/spacing';
+import { radius, spacing, typography } from '../theme/spacing';
 
 interface Props {
   name: string;
@@ -9,82 +10,60 @@ interface Props {
   onToggle: () => void;
 }
 
+// Exact match to Lovable's Bar Saya chip: a tappable rounded rectangle
+// (not a native Switch) with the ingredient name on the left and a small
+// checkmark circle on the right that fills gold when owned. Sits in a
+// 2-column grid (see BarScreen.tsx).
 export function IngredientToggleRow({ name, owned, onToggle }: Props) {
-  const glowAnim = useRef(new Animated.Value(owned ? 1 : 0)).current;
-  const bgAnim = useRef(new Animated.Value(owned ? 1 : 0)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.spring(glowAnim, {
-        toValue: owned ? 1 : 0,
-        friction: 8,
-        tension: 60,
-        useNativeDriver: false,
-      }),
-      Animated.timing(bgAnim, {
-        toValue: owned ? 1 : 0,
-        duration: 250,
-        useNativeDriver: false,
-      }),
-    ]).start();
-  }, [owned]);
-
-  const borderColor = bgAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.border, colors.goldMuted],
-  });
-
-  const glowColor = glowAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 0.15],
-  });
-
   return (
-    <Animated.View
-      style={[
-        styles.row,
-        {
-          borderColor,
-          shadowColor: colors.gold,
-          shadowOpacity: glowColor,
-          shadowRadius: 8,
-        },
-      ]}
+    <Pressable
+      onPress={onToggle}
+      accessibilityRole="button"
+      accessibilityState={{ selected: owned }}
+      style={[styles.chip, owned && styles.chipActive]}
     >
-      <View style={styles.nameWrap}>
-        <Text style={[styles.name, owned && styles.nameOwned]}>{name}</Text>
+      <Text style={[styles.name, owned && styles.nameOwned]} numberOfLines={1}>
+        {name}
+      </Text>
+      <View style={[styles.check, owned && styles.checkActive]}>
+        <Ionicons name="checkmark" size={12} color={owned ? colors.primaryForeground : 'transparent'} />
       </View>
-      <Switch
-        value={owned}
-        onValueChange={onToggle}
-        trackColor={{ false: colors.border, true: colors.goldMuted }}
-        thumbColor={owned ? colors.gold : colors.textMuted}
-      />
-    </Animated.View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  row: {
+  chip: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: spacing.xs,
     backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    borderWidth: 1.5,
-    paddingHorizontal: spacing.lg,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
-    ...shadows.subtle,
   },
-  nameWrap: {
-    flex: 1,
+  chipActive: {
+    borderColor: colors.gold,
+    backgroundColor: colors.goldOverlay12,
+    ...shadows.goldGlow,
   },
-  name: {
-    color: colors.textPrimary,
-    fontSize: 14,
-    fontWeight: '600',
+  name: { ...typography.caption, color: colors.textSecondary, flexShrink: 1 },
+  nameOwned: { color: colors.textPrimary },
+  check: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  nameOwned: {
-    color: colors.gold,
+  checkActive: {
+    borderColor: colors.gold,
+    backgroundColor: colors.gold,
   },
 });

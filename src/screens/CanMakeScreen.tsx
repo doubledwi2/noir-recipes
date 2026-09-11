@@ -14,6 +14,7 @@ import { ALMOST_THERE_MAX_MISSING, getRecipeMatches } from '../utils/matching';
 import { useI18n } from '../i18n/useI18n';
 
 interface Section {
+  kind: 'canMake' | 'almost';
   title: string;
   subtitle: string;
   data: { recipe: Recipe; missingCount: number }[];
@@ -47,6 +48,7 @@ export function CanMakeScreen() {
     const result: Section[] = [];
     if (canMake.length > 0) {
       result.push({
+        kind: 'canMake',
         title: strings.canMake.canMakeSectionTitle,
         subtitle: strings.canMake.canMakeSectionSubtitle,
         data: canMake,
@@ -54,6 +56,7 @@ export function CanMakeScreen() {
     }
     if (almost.length > 0) {
       result.push({
+        kind: 'almost',
         title: strings.canMake.almostSectionTitle,
         subtitle: strings.canMake.almostSectionSubtitle,
         data: almost,
@@ -76,25 +79,22 @@ export function CanMakeScreen() {
         keyExtractor={(item) => item.recipe.id}
         contentContainerStyle={styles.listContent}
         stickySectionHeadersEnabled={false}
-        renderSectionHeader={({ section }) => {
-          const isCanMake = (section as Section).title === strings.canMake.canMakeSectionTitle;
-          return (
-            <View style={[styles.sectionHeader, isCanMake && styles.sectionHeaderGreen]}>
-              <View style={[styles.sectionIndicator, isCanMake ? styles.sectionIndicatorGreen : styles.sectionIndicatorGold]} />
-              <View>
-                <Text style={styles.sectionTitle}>{(section as Section).title}</Text>
-                <Text style={styles.sectionSubtitle}>{(section as Section).subtitle}</Text>
-              </View>
+        renderSectionHeader={({ section }) => (
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionIndicator} />
+            <View>
+              <Text style={styles.sectionTitle}>{(section as Section).title}</Text>
+              <Text style={styles.sectionSubtitle}>{(section as Section).subtitle}</Text>
             </View>
-          );
-        }}
+          </View>
+        )}
         renderItem={({ item }) => (
           <RecipeCard
             recipe={item.recipe}
             isFavorite={isFavorite(item.recipe.id)}
             onPress={() => openRecipe(item.recipe.id)}
             onToggleFavorite={() => toggleFavorite(item.recipe.id)}
-            missingCount={item.missingCount}
+            note={item.missingCount === 0 ? strings.canMake.complete : strings.canMake.missingBadge(item.missingCount)}
           />
         )}
         ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
@@ -139,17 +139,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.borderSubtle,
   },
-  sectionHeaderGreen: {
-    borderColor: `${colors.success}30`,
-    backgroundColor: `${colors.success}08`,
-  },
   sectionIndicator: {
     width: 4,
     height: 32,
     borderRadius: 2,
+    backgroundColor: colors.gold,
   },
-  sectionIndicatorGreen: { backgroundColor: colors.success },
-  sectionIndicatorGold: { backgroundColor: colors.gold },
   sectionTitle: { ...typography.bodyStrong, color: colors.textPrimary, fontSize: 14 },
   sectionSubtitle: { color: colors.textMuted, fontSize: 11, marginTop: 1 },
 });

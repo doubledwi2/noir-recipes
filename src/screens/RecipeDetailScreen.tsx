@@ -1,25 +1,22 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Animated, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { RECIPE_MAP } from '../data/recipes';
 import { INGREDIENT_MAP } from '../data/ingredients';
-import { categoryColors, colors, shadows } from '../theme/colors';
+import { colors, shadows } from '../theme/colors';
 import { radius, spacing, typography } from '../theme/spacing';
-import { DifficultyBadge } from '../components/DifficultyBadge';
 import { FavoriteButton } from '../components/FavoriteButton';
 import { IngredientRow } from '../components/IngredientRow';
 import { EmptyState } from '../components/EmptyState';
 import { useFavorites } from '../context/FavoritesContext';
 import { useMyBar } from '../context/MyBarContext';
-import { CATEGORY_LABELS, GLASS_TYPE_LABELS } from '../i18n/labels';
+import { CATEGORY_LABELS, GLASS_TYPE_LABELS, DIFFICULTY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
 
-const CATEGORY_GLYPH: Record<string, string> = {
-  Cocktail: '🍸',
-  Mocktail: '🥂',
-  'Minuman Kekinian': '🧋',
-};
-
+// NOTE: the "Video Tutorial" section that used to live here has been
+// intentionally removed to match the current approved design (see
+// Lovable plan: hapus-video-tutorial-dan-tambah-upgrade-pro). Recipe data
+// may still carry a `videoUrl` field -- it's just not rendered anymore.
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const recipe = RECIPE_MAP[recipeId];
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -37,12 +34,12 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   };
 
   const contentFade = useRef(new Animated.Value(0)).current;
-  const contentSlide = useRef(new Animated.Value(30)).current;
+  const contentSlide = useRef(new Animated.Value(16)).current;
 
   useEffect(() => {
     if (recipe) {
       Animated.parallel([
-        Animated.timing(contentFade, { toValue: 1, duration: 500, useNativeDriver: true }),
+        Animated.timing(contentFade, { toValue: 1, duration: 400, useNativeDriver: true }),
         Animated.spring(contentSlide, { toValue: 0, friction: 8, useNativeDriver: true }),
       ]).start();
     }
@@ -52,7 +49,12 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
     return <EmptyState emoji="🚫" title={strings.detail.notFoundTitle} />;
   }
 
-  const tint = categoryColors[recipe.category] ?? colors.gold;
+  const fav = isFavorite(recipe.id);
+  const stats = [
+    { label: t(GLASS_TYPE_LABELS[recipe.glassType]), icon: 'wine-outline' as const },
+    { label: t(DIFFICULTY_LABELS[recipe.difficulty]), icon: 'sparkles-outline' as const },
+    { label: strings.common.minutesLabel(recipe.prepTimeMinutes), icon: 'time-outline' as const },
+  ];
 
   return (
     <ScrollView
@@ -60,53 +62,10 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* Premium hero with layered gradients */}
-      <LinearGradient
-        colors={[`${tint}45`, `${tint}10`, colors.bg]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0.3, y: 1 }}
-        style={styles.hero}
-      >
-        {/* Decorative rings */}
-        <View style={[styles.heroRing, { borderColor: `${tint}15` }]} />
-        <View style={[styles.heroRing, styles.heroRingInner, { borderColor: `${tint}10` }]} />
-
-        <Text style={styles.heroGlyph}>{CATEGORY_GLYPH[recipe.category] ?? '🍹'}</Text>
-
-        <View style={styles.heroFavorite}>
-          <FavoriteButton isFavorite={isFavorite(recipe.id)} onToggle={() => toggleFavorite(recipe.id)} size={42} />
-        </View>
-
-        {/* Bottom gradient fade */}
-        <LinearGradient
-          colors={['transparent', colors.bg]}
-          style={styles.heroBottomFade}
-        />
-      </LinearGradient>
-
-      <Animated.View style={[styles.body, { opacity: contentFade, transform: [{ translateY: contentSlide }] }]}>
-        {/* Category tag */}
-        <View style={[styles.categoryBadge, { backgroundColor: `${tint}18` }]}>
-          <Text style={[styles.category, { color: tint }]}>
-            {t(CATEGORY_LABELS[recipe.category]).toUpperCase()}
-          </Text>
-        </View>
-
+      <Animated.View style={{ opacity: contentFade, transform: [{ translateY: contentSlide }] }}>
+        <Text style={styles.category}>{t(CATEGORY_LABELS[recipe.category]).toUpperCase()}</Text>
         <Text style={styles.title}>{t(recipe.title)}</Text>
 
-        {/* Gold divider */}
-        <View style={styles.divider} />
-
-        {/* Meta pills row */}
-        <View style={styles.metaRow}>
-          <DifficultyBadge difficulty={recipe.difficulty} />
-          <View style={styles.metaDot} />
-          <Text style={styles.metaText}>⏱ {strings.common.minutesLabel(recipe.prepTimeMinutes)}</Text>
-          <View style={styles.metaDot} />
-          <Text style={styles.metaText}>🥃 {t(GLASS_TYPE_LABELS[recipe.glassType])}</Text>
-        </View>
-
-        {/* Tags */}
         {recipe.tags.length > 0 && (
           <View style={styles.tagsRow}>
             {recipe.tags.map((tag) => (
@@ -117,13 +76,40 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
           </View>
         )}
 
+        {/* 3-stat grid: glass / difficulty / time -- exact match to Lovable */}
+        <View style={styles.statsRow}>
+          {stats.map((stat) => (
+            <View key={stat.label} style={styles.statBox}>
+              <Ionicons name={stat.icon} size={16} color={colors.gold} />
+              <Text style={styles.statLabel} numberOfLines={1}>
+                {stat.label}
+              </Text>
+            </View>
+          ))}
+        </View>
+
+        <TouchableOpacity
+          onPress={() => toggleFavorite(recipe.id)}
+          activeOpacity={0.85}
+          style={[styles.favButton, fav && styles.favButtonActive]}
+        >
+          <Ionicons
+            name={fav ? 'heart' : 'heart-outline'}
+            size={16}
+            color={fav ? colors.primaryForeground : colors.gold}
+          />
+          <Text style={[styles.favButtonText, fav && styles.favButtonTextActive]}>
+            {fav ? strings.detail.favSaved : strings.detail.favSave}
+          </Text>
+        </TouchableOpacity>
+
         {/* Ingredients */}
         <Section title={strings.detail.ingredientsTitle}>
           <View style={styles.ingredientsCard}>
             {recipe.ingredients.map((item, idx) => {
               const ingredient = INGREDIENT_MAP[item.ingredientId];
               return (
-                <View key={item.ingredientId}>
+                <View key={`${item.ingredientId}-${idx}`}>
                   <IngredientRow
                     name={ingredient ? t(ingredient.name) : item.ingredientId}
                     amount={t(item.amount)}
@@ -152,9 +138,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
                     {isCompleted ? '✓' : index + 1}
                   </Text>
                 </View>
-                <Text style={[styles.stepText, isCompleted && styles.stepTextCompleted]}>
-                  {t(step)}
-                </Text>
+                <Text style={[styles.stepText, isCompleted && styles.stepTextCompleted]}>{t(step)}</Text>
               </TouchableOpacity>
             );
           })}
@@ -166,26 +150,6 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
             <View style={styles.notesCard}>
               <Text style={styles.notesText}>{t(recipe.notes)}</Text>
             </View>
-          </Section>
-        )}
-
-        {/* Video */}
-        {recipe.videoUrl && (
-          <Section title={strings.detail.videoTitle}>
-            <TouchableOpacity
-              style={styles.videoButton}
-              onPress={() => Linking.openURL(recipe.videoUrl!)}
-              activeOpacity={0.85}
-            >
-              <LinearGradient
-                colors={[colors.wine, colors.wineMuted]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.videoGradient}
-              >
-                <Text style={styles.videoButtonText}>{strings.detail.watchButton}</Text>
-              </LinearGradient>
-            </TouchableOpacity>
           </Section>
         )}
       </Animated.View>
@@ -204,160 +168,85 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  content: { paddingBottom: spacing.xxxl },
-  hero: {
-    height: 220,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  heroRing: {
-    position: 'absolute',
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    borderWidth: 1,
-    top: 20,
-  },
-  heroRingInner: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    top: 40,
-  },
-  heroGlyph: { fontSize: 80, zIndex: 1 },
-  heroFavorite: { position: 'absolute', top: spacing.xl, right: spacing.xl, zIndex: 2 },
-  heroBottomFade: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-  },
-  body: { paddingHorizontal: spacing.lg, paddingTop: spacing.lg },
-  categoryBadge: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-    marginBottom: spacing.sm,
-  },
-  category: {
-    ...typography.goldLabel,
-    fontSize: 10,
-  },
-  title: {
-    ...typography.display,
-    color: colors.textPrimary,
-    fontSize: 26,
-  },
-  divider: {
-    width: 40,
-    height: 2,
-    borderRadius: 1,
-    backgroundColor: colors.gold,
-    marginVertical: spacing.lg,
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    flexWrap: 'wrap',
-  },
-  metaDot: {
-    width: 3,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: colors.textMuted,
-    opacity: 0.5,
-  },
-  metaText: { color: colors.textSecondary, fontSize: 12, fontWeight: '500' },
-  tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.lg },
+  content: { paddingHorizontal: spacing.lg, paddingTop: spacing.xxxl, paddingBottom: spacing.xxxl },
+  category: { ...typography.goldLabel, color: colors.gold, opacity: 0.8 },
+  title: { ...typography.display, color: colors.textPrimary, marginTop: spacing.xs + 2 },
+  tagsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.md },
   tag: {
     backgroundColor: colors.surfaceAlt,
     borderRadius: radius.sm,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 1,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
+    borderColor: colors.border,
   },
   tagText: { color: colors.textMuted, fontSize: 11, fontWeight: '600' },
-  section: { marginTop: spacing.xl },
-  sectionTitle: {
-    ...typography.h2,
-    color: colors.gold,
-    marginBottom: spacing.md,
+  statsRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg },
+  statBox: {
+    flex: 1,
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: spacing.md,
   },
+  statLabel: { ...typography.small, color: colors.textSecondary, letterSpacing: 0 },
+  favButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs + 2,
+    marginTop: spacing.md,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.goldOverlay15,
+    paddingVertical: spacing.md,
+  },
+  favButtonActive: {
+    backgroundColor: colors.gold,
+    borderColor: colors.gold,
+    ...shadows.goldGlow,
+  },
+  favButtonText: { ...typography.bodyStrong, color: colors.gold },
+  favButtonTextActive: { color: colors.primaryForeground },
+  section: { marginTop: spacing.xxl },
+  sectionTitle: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.md },
   ingredientsCard: {
     backgroundColor: colors.surface,
-    borderRadius: radius.md,
+    borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: colors.borderSubtle,
+    borderColor: colors.border,
     padding: spacing.md,
     ...shadows.subtle,
   },
-  ingredientSeparator: {
-    height: 1,
-    backgroundColor: colors.borderSubtle,
-    marginVertical: 2,
-  },
-  stepRow: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    marginBottom: spacing.lg,
-  },
+  ingredientSeparator: { height: 1, backgroundColor: colors.border, marginVertical: 2 },
+  stepRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.md },
   stepNumber: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: colors.gold,
+    borderWidth: 1,
+    borderColor: colors.goldOverlay15,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 1,
-    ...shadows.goldGlow,
   },
   stepNumberCompleted: {
-    backgroundColor: colors.surfaceAlt,
-    borderWidth: 1,
-    borderColor: colors.goldMuted,
-    shadowOpacity: 0,
-    elevation: 0,
+    backgroundColor: colors.gold,
+    borderColor: colors.gold,
   },
-  stepNumberText: { color: colors.bg, fontSize: 12, fontWeight: '800' },
-  stepNumberTextCompleted: {
-    color: colors.gold,
-  },
-  stepText: {
-    flex: 1,
-    color: colors.textPrimary,
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  stepTextCompleted: {
-    color: colors.textMuted,
-    textDecorationLine: 'line-through',
-  },
+  stepNumberText: { color: colors.gold, fontSize: 12, fontWeight: '700' },
+  stepNumberTextCompleted: { color: colors.primaryForeground },
+  stepText: { flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 22 },
+  stepTextCompleted: { color: colors.textMuted, textDecorationLine: 'line-through' },
   notesCard: {
-    backgroundColor: `${colors.gold}0A`,
-    borderRadius: radius.md,
+    backgroundColor: colors.goldOverlay12,
+    borderRadius: radius.card,
     borderWidth: 1,
-    borderColor: `${colors.gold}20`,
+    borderColor: colors.goldOverlay15,
     padding: spacing.lg,
   },
-  notesText: {
-    color: colors.textSecondary,
-    fontSize: 13,
-    lineHeight: 20,
-    fontStyle: 'italic',
-  },
-  videoButton: {
-    borderRadius: radius.md,
-    overflow: 'hidden',
-    ...shadows.card,
-  },
-  videoGradient: {
-    paddingVertical: spacing.lg,
-    alignItems: 'center',
-  },
-  videoButtonText: { color: colors.textPrimary, fontWeight: '800', fontSize: 15, letterSpacing: 0.3 },
+  notesText: { color: colors.textSecondary, fontSize: 13, lineHeight: 20, fontStyle: 'italic' },
 });

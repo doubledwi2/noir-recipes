@@ -1,12 +1,11 @@
 import React, { useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import type { Recipe } from '../types';
-import { categoryColors, colors, shadows } from '../theme/colors';
+import { colors, shadows } from '../theme/colors';
 import { radius, spacing, typography } from '../theme/spacing';
-import { RecipeThumb } from './RecipeThumb';
-import { FavoriteButton } from './FavoriteButton';
-import { DifficultyBadge } from './DifficultyBadge';
-import { CATEGORY_LABELS, GLASS_TYPE_LABELS } from '../i18n/labels';
+import { CATEGORY_LABELS, DIFFICULTY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
 
 interface Props {
@@ -14,65 +13,76 @@ interface Props {
   isFavorite: boolean;
   onPress: () => void;
   onToggleFavorite: () => void;
-  missingCount?: number;
+  /** Badge text shown next to the meta pills, e.g. "Lengkap" / "Kurang 2 bahan". */
+  note?: string;
 }
 
-export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, missingCount }: Props) {
+// Matches the Lovable design exactly: no thumbnail image, a thin gold accent
+// bar on the left edge, gold uppercase category eyebrow, serif title, and
+// two bordered meta pills (difficulty, time). The heart button sits in the
+// top-right of the header row and fills gold (not red/wine) when active.
+export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note }: Props) {
   const { t, strings } = useI18n();
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const onPressIn = () => {
-    Animated.spring(scaleAnim, { toValue: 0.97, friction: 8, useNativeDriver: true }).start();
+    Animated.spring(scaleAnim, { toValue: 0.98, friction: 8, useNativeDriver: true }).start();
   };
   const onPressOut = () => {
     Animated.spring(scaleAnim, { toValue: 1, friction: 8, useNativeDriver: true }).start();
   };
 
-  const tint = categoryColors[recipe.category] ?? colors.gold;
-
   return (
-    <Animated.View style={[{ transform: [{ scale: scaleAnim }] }]}>
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <Pressable
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
-        style={({ pressed }) => [
-          styles.card,
-          pressed && styles.cardPressed,
-        ]}
+        style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
       >
-        {/* Gold accent line on left */}
-        <View style={[styles.accentLine, { backgroundColor: tint }]} />
+        <LinearGradient
+          colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={styles.accentLine}
+        />
 
-        <RecipeThumb category={recipe.category} />
-        <View style={styles.body}>
-          <View style={styles.headerRow}>
-            <View style={[styles.categoryBadge, { backgroundColor: `${tint}18` }]}>
-              <Text style={[styles.category, { color: tint }]}>
-                {t(CATEGORY_LABELS[recipe.category]).toUpperCase()}
-              </Text>
-            </View>
-            {typeof missingCount === 'number' && missingCount > 0 && (
-              <View style={styles.missingBadge}>
-                <Text style={styles.missingBadgeText}>{strings.canMake.missingBadge(missingCount)}</Text>
-              </View>
-            )}
-          </View>
-          <Text style={styles.title} numberOfLines={2}>
-            {t(recipe.title)}
-          </Text>
-          <View style={styles.metaRow}>
-            <DifficultyBadge difficulty={recipe.difficulty} />
-            <View style={styles.metaDot} />
-            <Text style={styles.metaText}>{strings.common.minutesLabel(recipe.prepTimeMinutes)}</Text>
-            <View style={styles.metaDot} />
-            <Text style={styles.metaText} numberOfLines={1}>
-              {t(GLASS_TYPE_LABELS[recipe.glassType])}
+        <View style={styles.headerRow}>
+          <View style={styles.titleBlock}>
+            <Text style={styles.category}>{t(CATEGORY_LABELS[recipe.category]).toUpperCase()}</Text>
+            <Text style={styles.title} numberOfLines={2}>
+              {t(recipe.title)}
             </Text>
           </View>
+          <Pressable
+            onPress={onToggleFavorite}
+            hitSlop={8}
+            style={[styles.favoriteButton, isFavorite && styles.favoriteButtonActive]}
+            accessibilityRole="button"
+            accessibilityLabel={isFavorite ? strings.favoriteButton.remove : strings.favoriteButton.add}
+          >
+            <Ionicons
+              name={isFavorite ? 'heart' : 'heart-outline'}
+              size={16}
+              color={isFavorite ? colors.gold : colors.textSecondary}
+            />
+          </Pressable>
         </View>
-        <View style={styles.favoriteWrap}>
-          <FavoriteButton isFavorite={isFavorite} onToggle={onToggleFavorite} size={34} />
+
+        <View style={styles.metaRow}>
+          <View style={styles.metaPill}>
+            <Ionicons name="wine-outline" size={12} color={colors.goldMuted} />
+            <Text style={styles.metaText}>{t(DIFFICULTY_LABELS[recipe.difficulty])}</Text>
+          </View>
+          <View style={styles.metaPill}>
+            <Ionicons name="time-outline" size={12} color={colors.goldMuted} />
+            <Text style={styles.metaText}>{strings.common.minutesLabel(recipe.prepTimeMinutes)}</Text>
+          </View>
+          {note ? (
+            <View style={styles.noteBadge}>
+              <Text style={styles.noteBadgeText}>{note}</Text>
+            </View>
+          ) : null}
         </View>
       </Pressable>
     </Animated.View>
@@ -81,66 +91,68 @@ export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, miss
 
 const styles = StyleSheet.create({
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: colors.surface,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    paddingLeft: 0,
-    gap: spacing.md,
+    borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.border,
+    padding: spacing.md + 4,
     overflow: 'hidden',
     ...shadows.card,
   },
   cardPressed: {
-    backgroundColor: colors.surfaceHover,
-    borderColor: colors.goldDim,
+    borderColor: colors.goldOverlay15,
   },
   accentLine: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
     width: 3,
-    height: '80%',
-    borderRadius: 2,
-    marginLeft: spacing.sm,
+    opacity: 0.6,
   },
-  body: { flex: 1, gap: 5 },
-  headerRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  categoryBadge: {
-    paddingHorizontal: spacing.sm + 2,
-    paddingVertical: 2,
-    borderRadius: radius.pill,
-  },
-  category: { ...typography.goldLabel, fontSize: 10 },
+  headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
+  titleBlock: { flex: 1, minWidth: 0 },
+  category: { ...typography.goldLabel, color: colors.gold, opacity: 0.8 },
   title: {
     ...typography.h2,
     color: colors.textPrimary,
-    fontSize: 16,
-    lineHeight: 22,
+    marginTop: 4,
+  },
+  favoriteButton: {
+    width: 32,
+    height: 32,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  favoriteButtonActive: {
+    borderColor: colors.gold,
   },
   metaRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    gap: 6,
-    marginTop: 2,
+    gap: spacing.xs + 2,
+    marginTop: spacing.sm + 2,
   },
-  metaDot: {
-    width: 3,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: colors.textMuted,
-    opacity: 0.5,
-  },
-  metaText: { color: colors.textSecondary, fontSize: 12, flexShrink: 1 },
-  missingBadge: {
-    backgroundColor: colors.successBg,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
-    borderRadius: radius.pill,
+  metaPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     borderWidth: 1,
-    borderColor: `${colors.success}30`,
+    borderColor: colors.border,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
   },
-  missingBadgeText: { color: colors.success, fontSize: 10, fontWeight: '700' },
-  favoriteWrap: {
-    paddingRight: spacing.md,
+  metaText: { ...typography.small, color: colors.textSecondary, letterSpacing: 0 },
+  noteBadge: {
+    backgroundColor: colors.goldOverlay15,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
   },
+  noteBadgeText: { ...typography.small, color: colors.gold, letterSpacing: 0 },
 });

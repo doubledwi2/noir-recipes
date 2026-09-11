@@ -1,11 +1,14 @@
-import React, { useMemo, useRef, useEffect } from 'react';
-import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { RECIPES } from '../data/recipes';
 import { colors, shadows } from '../theme/colors';
-import { radius, spacing, typography } from '../theme/spacing';
+import { spacing, typography } from '../theme/spacing';
 import { RecipeCard } from '../components/RecipeCard';
-import { EmptyState } from '../components/EmptyState';
+import { ScreenHeader } from '../components/ScreenHeader';
 import { useFavorites } from '../context/FavoritesContext';
 import { useOpenRecipe } from '../ads/InterstitialProvider';
 import { useI18n } from '../i18n/useI18n';
@@ -15,12 +18,7 @@ export function FavoritesScreen() {
   const { favoriteIds, isFavorite, toggleFavorite } = useFavorites();
   const openRecipe = useOpenRecipe();
   const { strings } = useI18n();
-
-  const headerFade = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(headerFade, { toValue: 1, duration: 500, useNativeDriver: true }).start();
-  }, []);
+  const router = useRouter();
 
   const favoriteRecipes = useMemo(
     () => RECIPES.filter((recipe) => favoriteIds.has(recipe.id)),
@@ -29,20 +27,17 @@ export function FavoritesScreen() {
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
-      <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <Text style={styles.title}>{strings.favorites.title}</Text>
-        <Text style={styles.tagline}>{strings.favorites.tagline}</Text>
-        {favoriteRecipes.length > 0 && (
-          <View style={styles.countBadge}>
-            <Text style={styles.countText}>{favoriteRecipes.length}</Text>
-          </View>
-        )}
-      </Animated.View>
-
       <FlatList
         data={favoriteRecipes}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
+        ListHeaderComponent={
+          <ScreenHeader
+            eyebrow={strings.favorites.eyebrow}
+            title={strings.favorites.title}
+            subtitle={strings.favorites.tagline(favoriteRecipes.length)}
+          />
+        }
         renderItem={({ item }) => (
           <RecipeCard
             recipe={item}
@@ -53,7 +48,23 @@ export function FavoritesScreen() {
         )}
         ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
         ListEmptyComponent={
-          <EmptyState emoji="🤍" title={strings.favorites.emptyTitle} subtitle={strings.favorites.emptySubtitle} />
+          <View style={styles.empty}>
+            <View style={styles.emptyIconWrap}>
+              <Ionicons name="heart" size={32} color={colors.gold} />
+            </View>
+            <Text style={styles.emptyTitle}>{strings.favorites.emptyTitle}</Text>
+            <Text style={styles.emptySubtitle}>{strings.favorites.emptySubtitle}</Text>
+            <Pressable onPress={() => router.push('/')} style={styles.emptyCtaWrap}>
+              <LinearGradient
+                colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.emptyCta}
+              >
+                <Text style={styles.emptyCtaText}>{strings.favorites.emptyCta}</Text>
+              </LinearGradient>
+            </Pressable>
+          </View>
         }
         showsVerticalScrollIndicator={false}
       />
@@ -63,32 +74,39 @@ export function FavoritesScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
-  header: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.lg,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-  },
-  title: { ...typography.h1, color: colors.textPrimary },
-  tagline: { display: 'none' },
-  countBadge: {
-    backgroundColor: colors.wineMuted,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: `${colors.wine}40`,
-  },
-  countText: {
-    color: colors.wineLight,
-    fontSize: 13,
-    fontWeight: '800',
-  },
   listContent: {
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xxxl,
     flexGrow: 1,
   },
+  empty: {
+    alignItems: 'center',
+    marginTop: spacing.xxxl,
+    paddingHorizontal: spacing.xl,
+  },
+  emptyIconWrap: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: colors.goldOverlay15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.goldGlow,
+  },
+  emptyTitle: { ...typography.h1, color: colors.textPrimary, marginTop: spacing.xl, textAlign: 'center' },
+  emptySubtitle: {
+    ...typography.body,
+    color: colors.textSecondary,
+    marginTop: spacing.sm,
+    textAlign: 'center',
+    maxWidth: 260,
+  },
+  emptyCtaWrap: { marginTop: spacing.xl },
+  emptyCta: {
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.md,
+    borderRadius: 999,
+  },
+  emptyCtaText: { ...typography.bodyStrong, color: colors.primaryForeground },
 });
