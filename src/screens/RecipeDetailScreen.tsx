@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as ScreenCapture from 'expo-screen-capture';
 import { RECIPE_MAP } from '../data/recipes';
 import { INGREDIENT_MAP } from '../data/ingredients';
 import { colors, shadows } from '../theme/colors';
@@ -50,6 +51,19 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
       ]).start();
     }
   }, [recipeId]);
+
+  // Blocks screenshots/screen recording while this screen is open (Android:
+  // FLAG_SECURE, so it also hides from the recent-apps thumbnail; iOS just
+  // gets a best-effort capture-detected event, there's no OS-level block).
+  // Scoped to mount/unmount of this screen only -- other screens are
+  // unaffected. See discussion: protecting premium recipe content from
+  // mass screenshotting after a Pro subscription is cancelled.
+  useEffect(() => {
+    ScreenCapture.preventScreenCaptureAsync();
+    return () => {
+      ScreenCapture.allowScreenCaptureAsync();
+    };
+  }, []);
 
   if (!recipe) {
     return <EmptyState emoji="🚫" title={strings.detail.notFoundTitle} />;
