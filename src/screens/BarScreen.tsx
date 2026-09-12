@@ -28,7 +28,7 @@ export function BarScreen() {
     () =>
       INGREDIENT_TYPES.map((type) => ({
         title: t(INGREDIENT_TYPE_LABELS[type]),
-        data: chunkPairs(INGREDIENTS.filter((ingredient) => ingredient.type === type)),
+        data: chunkPairs(INGREDIENTS.filter((ingredient) => ingredient.type === type && !ingredient.alwaysAvailable)),
       })).filter((section) => section.data.length > 0),
     [t],
   );

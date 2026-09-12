@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { myBarStorage } from '../utils/storage';
+import { INGREDIENTS } from '../data/ingredients';
+
+const ALWAYS_AVAILABLE_IDS = new Set(INGREDIENTS.filter((i) => i.alwaysAvailable).map((i) => i.id));
+export { ALWAYS_AVAILABLE_IDS };
 
 interface MyBarContextValue {
   ownedIngredientIds: Set<string>;
@@ -43,7 +47,8 @@ export function MyBarProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<MyBarContextValue>(
     () => ({
       ownedIngredientIds,
-      hasIngredient: (ingredientId: string) => ownedIngredientIds.has(ingredientId),
+      hasIngredient: (ingredientId: string) =>
+        ownedIngredientIds.has(ingredientId) || ALWAYS_AVAILABLE_IDS.has(ingredientId),
       toggleIngredient,
       isLoaded,
     }),

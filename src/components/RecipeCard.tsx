@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import type { Recipe } from '../types';
 import { colors } from '../theme/colors';
@@ -17,8 +16,7 @@ interface Props {
   note?: string;
 }
 
-// Matches the Lovable design exactly: no thumbnail image, a thin gold accent
-// bar on the left edge, gold uppercase category eyebrow, serif title, and
+// Recipe card with a gold uppercase category eyebrow, serif title, and
 // two bordered meta pills (difficulty, time). The heart button sits in the
 // top-right of the header row and fills gold (not red/wine) when active.
 export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note }: Props) {
@@ -40,13 +38,6 @@ export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note
         onPressOut={onPressOut}
         style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
       >
-        <LinearGradient
-          colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={styles.accentLine}
-        />
-
         <View style={styles.headerRow}>
           <View style={styles.titleBlock}>
             <Text style={styles.category}>{t(CATEGORY_LABELS[recipe.category]).toUpperCase()}</Text>
@@ -105,14 +96,6 @@ const styles = StyleSheet.create({
   },
   cardPressed: {
     borderColor: colors.gold,
-  },
-  accentLine: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 3,
-    opacity: 0.6,
   },
   headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
   titleBlock: { flex: 1, minWidth: 0 },

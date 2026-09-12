@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 // "Noir Mixology" home-bar palette -- values copied EXACTLY (converted
 // oklch -> hex) from the approved Lovable design (project noir-mix-alchemy).
 // Do not eyeball-adjust these; if the design changes, re-derive from the
@@ -81,11 +83,16 @@ export const shadows = {
     elevation: 4,
   },
   goldGlow: {
-    shadowColor: colors.gold,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 6,
+    // Keep Android's glow outside the border, including on transparent surfaces.
+    ...Platform.select({
+      android: { boxShadow: '0px 0px 12px rgba(233, 190, 87, 0.3)' },
+      default: {
+        shadowColor: colors.gold,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.3,
+        shadowRadius: 12,
+      },
+    }),
   },
   subtle: {
     shadowColor: '#000',

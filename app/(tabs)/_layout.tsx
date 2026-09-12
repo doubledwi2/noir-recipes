@@ -5,7 +5,7 @@ import { BottomTabBar } from 'expo-router/tabs';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, shadows } from '../../src/theme/colors';
+import { colors } from '../../src/theme/colors';
 import { radius, spacing } from '../../src/theme/spacing';
 import { useI18n } from '../../src/i18n/useI18n';
 import { BannerSlot } from '../../src/ads/BannerSlot';
@@ -28,6 +28,7 @@ export default function TabsLayout() {
         tabBar={(props) => (
           <View style={styles.navigation}>
             <View style={styles.adSlot}><BannerSlot /></View>
+            <View style={styles.separator} />
             <BottomTabBar {...props} />
           </View>
         )}
@@ -62,12 +63,10 @@ export default function TabsLayout() {
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: colors.bgElevated,
-    borderTopColor: colors.borderSubtle,
-    borderTopWidth: 0.5,
+    borderTopWidth: 0,
     paddingTop: spacing.sm,
     paddingBottom: spacing.sm + 2,
     height: 64,
-    ...shadows.elevated,
   },
   tabLabel: {
     fontFamily: 'PlusJakartaSans_500Medium',
@@ -89,5 +88,10 @@ const styles = StyleSheet.create({
   },
   activeLine: { position: 'absolute', top: -8, height: 1, width: 36 },
   navigation: { backgroundColor: colors.bg },
+  separator: {
+    marginHorizontal: spacing.screen,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.borderSubtle,
+  },
   adSlot: { paddingHorizontal: spacing.screen, paddingTop: spacing.sm, paddingBottom: spacing.sm },
 });

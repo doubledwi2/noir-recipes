@@ -10,7 +10,7 @@ import { RecipeCard } from '../components/RecipeCard';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { EmptyState } from '../components/EmptyState';
 import { useFavorites } from '../context/FavoritesContext';
-import { useMyBar } from '../context/MyBarContext';
+import { useMyBar, ALWAYS_AVAILABLE_IDS } from '../context/MyBarContext';
 import { useOpenRecipe } from '../ads/InterstitialProvider';
 import { ALMOST_THERE_MAX_MISSING, getRecipeMatches } from '../utils/matching';
 import { useI18n } from '../i18n/useI18n';
@@ -30,7 +30,11 @@ export function CanMakeScreen() {
   const { t, strings } = useI18n();
 
   const sections = useMemo<Section[]>(() => {
-    const matches = getRecipeMatches(RECIPES, ownedIngredientIds);
+    // Ice/water etc. count as always on-hand -- don't let them block a
+    // recipe from showing as makeable just because the user never
+    // bothered to toggle them in Bar Saya.
+    const effectiveOwnedIds = new Set([...ownedIngredientIds, ...ALWAYS_AVAILABLE_IDS]);
+    const matches = getRecipeMatches(RECIPES, effectiveOwnedIds);
 
     const canMake = matches
       .filter((m) => m.canMake)

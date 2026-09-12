@@ -19,6 +19,11 @@ export interface Ingredient {
   id: string;
   name: LocalizedText;
   type: IngredientType;
+  // Treated as always "owned" in Bar Saya / Bisa Dibuat matching regardless
+  // of what the user has actually marked -- for things like ice/water that
+  // are assumed to always be on hand and would otherwise make nearly every
+  // recipe show as incomplete.
+  alwaysAvailable?: boolean;
 }
 
 // The three launch categories. Adding a new one only requires extending this
@@ -43,7 +48,13 @@ export type GlassTypeId =
   | 'julep-cup'
   | 'mule-mug'
   | 'tiki'
-  | 'wine-glass';
+  | 'wine-glass'
+  // Added when merging in the 363-recipe research dataset.
+  | 'collins'
+  | 'margarita'
+  | 'snifter'
+  | 'pitcher'
+  | 'bowl';
 
 export interface RecipeIngredient {
   ingredientId: string;

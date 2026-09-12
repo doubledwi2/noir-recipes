@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     paddingVertical: spacing.md,
   },
-  statLabel: { ...typography.small, color: colors.textSecondary, letterSpacing: 0 },
+  statLabel: { ...typography.small, color: colors.textSecondary, letterSpacing: 0, maxWidth: '100%', textAlign: 'center' },
   favButton: {
     flexDirection: 'row',
     alignItems: 'center',
