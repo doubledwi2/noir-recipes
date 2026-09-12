@@ -41,7 +41,15 @@
           "iosAppId": "ca-app-pub-3940256099942544~1458002511"
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "2.3.0"
+          }
+        }
+      ]
     ],
     "extra": {
       "router": {},
