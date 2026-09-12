@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     color: colors.textPrimary,
+    fontFamily: 'PlusJakartaSans_400Regular',
     fontSize: 14,
     height: '100%',
     fontWeight: '500',
