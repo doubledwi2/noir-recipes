@@ -22,6 +22,7 @@ export function CategoryTabs<T extends string>({ options, getLabel, allLabel, va
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
+      style={{ flexGrow: 0, flexShrink: 0 }}
       contentContainerStyle={styles.container}
     >
       <Chip label={allLabel} selected={value === null} onPress={() => onChange(null)} />
@@ -36,6 +37,8 @@ function Chip({ label, selected, onPress }: { label: string; selected: boolean; 
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
       style={({ pressed }) => [
         styles.chip,
         selected && styles.chipSelected,
@@ -62,6 +65,7 @@ const styles = StyleSheet.create({
     ...shadows.goldGlow,
   },
   chipText: {
+    fontFamily: 'PlusJakartaSans_500Medium',
     fontSize: 12,
     fontWeight: '500',
     color: colors.textSecondary,

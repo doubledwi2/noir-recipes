@@ -3,7 +3,7 @@ import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import type { Recipe } from '../types';
-import { colors, shadows } from '../theme/colors';
+import { colors } from '../theme/colors';
 import { radius, spacing, typography } from '../theme/spacing';
 import { CATEGORY_LABELS, DIFFICULTY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
@@ -60,7 +60,7 @@ export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note
             ) : null}
           </View>
           <Pressable
-            onPress={onToggleFavorite}
+            onPress={(event) => { event.stopPropagation(); onToggleFavorite(); }}
             hitSlop={8}
             style={[styles.favoriteButton, isFavorite && styles.favoriteButtonActive]}
             accessibilityRole="button"
@@ -102,10 +102,9 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     padding: spacing.md + 4,
     overflow: 'hidden',
-    ...shadows.card,
   },
   cardPressed: {
-    borderColor: colors.goldOverlay15,
+    borderColor: colors.gold,
   },
   accentLine: {
     position: 'absolute',
@@ -124,9 +123,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   tagline: {
-    ...typography.caption,
+    ...typography.body,
     color: colors.textSecondary,
-    marginTop: 2,
+    marginTop: 4,
     letterSpacing: 0,
   },
   favoriteButton: {
@@ -145,8 +144,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    gap: spacing.xs + 2,
-    marginTop: spacing.sm + 2,
+    gap: spacing.sm,
+    marginTop: spacing.md,
   },
   metaPill: {
     flexDirection: 'row',

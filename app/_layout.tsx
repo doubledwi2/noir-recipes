@@ -65,7 +65,7 @@ export default function RootLayout() {
                 <Stack.Screen
                   name="recipe/[id]"
                   options={{
-                    headerShown: true,
+                    headerShown: false,
                     headerTitle: '',
                     headerTransparent: true,
                     headerTintColor: colors.textPrimary,

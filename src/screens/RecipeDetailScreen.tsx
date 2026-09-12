@@ -6,7 +6,8 @@ import { RECIPE_MAP } from '../data/recipes';
 import { INGREDIENT_MAP } from '../data/ingredients';
 import { colors, shadows } from '../theme/colors';
 import { radius, spacing, typography } from '../theme/spacing';
-import { FavoriteButton } from '../components/FavoriteButton';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IngredientRow } from '../components/IngredientRow';
 import { EmptyState } from '../components/EmptyState';
 import { useFavorites } from '../context/FavoritesContext';
@@ -19,6 +20,7 @@ import { useI18n } from '../i18n/useI18n';
 // Lovable plan: hapus-video-tutorial-dan-tambah-upgrade-pro). Recipe data
 // may still carry a `videoUrl` field -- it's just not rendered anymore.
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
+  const insets = useSafeAreaInsets();
   const recipe = RECIPE_MAP[recipeId];
   const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -39,6 +41,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const contentSlide = useRef(new Animated.Value(16)).current;
 
   useEffect(() => {
+    setCompletedSteps(new Set());
     if (recipe) {
       Animated.parallel([
         Animated.timing(contentFade, { toValue: 1, duration: 400, useNativeDriver: true }),
@@ -61,11 +64,11 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   return (
     <ScrollView
       style={styles.screen}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.xl, paddingBottom: insets.bottom + spacing.xxxl }]}
       showsVerticalScrollIndicator={false}
     >
       <Animated.View style={{ opacity: contentFade, transform: [{ translateY: contentSlide }] }}>
-        <Pressable onPress={() => router.back()} hitSlop={8} style={styles.backRow}>
+        <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace("/")} hitSlop={8} style={styles.backRow}>
           <Ionicons name="arrow-back" size={18} color={colors.textSecondary} />
           <Text style={styles.backLabel}>{strings.detail.backLabel}</Text>
         </Pressable>
@@ -88,9 +91,12 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
 
         <TouchableOpacity
           onPress={() => toggleFavorite(recipe.id)}
+          accessibilityRole="button"
+          accessibilityState={{ selected: fav }}
           activeOpacity={0.85}
           style={[styles.favButton, fav && styles.favButtonActive]}
         >
+          {fav && <LinearGradient colors={[...colors.gradientGold]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />}
           <Ionicons
             name={fav ? 'heart' : 'heart-outline'}
             size={16}
@@ -129,6 +135,9 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
                 key={index}
                 style={styles.stepRow}
                 onPress={() => toggleStep(index)}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: isCompleted }}
+                accessibilityLabel={t(step)}
                 activeOpacity={0.7}
               >
                 <View style={[styles.stepNumber, isCompleted && styles.stepNumberCompleted]}>
@@ -167,12 +176,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { paddingHorizontal: spacing.screen, paddingTop: spacing.xxxl, paddingBottom: spacing.xxxl },
-  backRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs + 2, marginBottom: spacing.md },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs + 2, marginBottom: spacing.xl },
   backLabel: { ...typography.body, color: colors.textSecondary },
   category: { ...typography.goldLabel, color: colors.gold, opacity: 0.8 },
-  title: { ...typography.display, color: colors.textPrimary, marginTop: spacing.xs + 2 },
+  title: { ...typography.display, fontSize: 36, lineHeight: 40, color: colors.textPrimary, marginTop: spacing.xs + 2 },
   tagline: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xs + 2 },
-  statsRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg },
+  statsRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.screen },
   statBox: {
     flex: 1,
     alignItems: 'center',
@@ -189,7 +198,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.xs + 2,
-    marginTop: spacing.md,
+    marginTop: spacing.lg,
+    overflow: 'hidden',
     borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.goldOverlay15,
@@ -203,17 +213,16 @@ const styles = StyleSheet.create({
   favButtonText: { ...typography.bodyStrong, color: colors.gold },
   favButtonTextActive: { color: colors.primaryForeground },
   section: { marginTop: spacing.xxl },
-  sectionTitle: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.md },
+  sectionTitle: { ...typography.h2, fontSize: 24, lineHeight: 32, color: colors.textPrimary, marginBottom: spacing.md },
   ingredientsCard: {
     backgroundColor: colors.surface,
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.border,
-    padding: spacing.md,
-    ...shadows.subtle,
+    paddingHorizontal: spacing.lg,
   },
   ingredientSeparator: { height: 1, backgroundColor: colors.border, marginVertical: 2 },
-  stepRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.md },
+  stepRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.md, padding: spacing.lg, borderRadius: radius.card, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   stepNumber: {
     width: 28,
     height: 28,
@@ -230,7 +239,7 @@ const styles = StyleSheet.create({
   },
   stepNumberText: { color: colors.gold, fontSize: 12, fontWeight: '700' },
   stepNumberTextCompleted: { color: colors.primaryForeground },
-  stepText: { flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 22 },
+  stepText: { ...typography.body, flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 22 },
   stepTextCompleted: { color: colors.textMuted, textDecorationLine: 'line-through' },
   notesCard: {
     backgroundColor: colors.goldOverlay12,

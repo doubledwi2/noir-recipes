@@ -29,9 +29,9 @@ export function ScreenHeader({ eyebrow, title, subtitle }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { paddingTop: spacing.xl },
-  eyebrow: { ...typography.goldLabel, color: colors.gold, opacity: 0.8 },
-  title: { ...typography.h1, color: colors.textPrimary, marginTop: spacing.xs + 2 },
-  subtitle: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xs + 2 },
-  divider: { height: 1, width: '100%', marginTop: spacing.md, opacity: 0.5 },
+  container: { paddingTop: spacing.xxl },
+  eyebrow: { ...typography.goldLabel, letterSpacing: 3.52, color: colors.gold, opacity: 0.8 },
+  title: { ...typography.h1, color: colors.textPrimary, marginTop: spacing.sm },
+  subtitle: { ...typography.body, color: colors.textSecondary, marginTop: spacing.sm },
+  divider: { height: 1, width: '100%', marginTop: spacing.lg, opacity: 0.5 },
 });

@@ -67,6 +67,7 @@ export function HomeScreen() {
       />
 
       <FlatList
+        keyboardShouldPersistTaps="handled"
         data={filteredRecipes}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
@@ -92,15 +93,15 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   header: {
     paddingHorizontal: spacing.screen,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.xxl,
     paddingBottom: spacing.sm,
     alignItems: 'center',
   },
   subtitle: {
-    ...typography.caption,
+    ...typography.body,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginTop: spacing.sm,
+    marginTop: spacing.md,
   },
   divider: {
     height: 1,
@@ -110,12 +111,12 @@ const styles = StyleSheet.create({
   },
   searchWrap: {
     paddingHorizontal: spacing.screen,
-    marginTop: spacing.md,
-    marginBottom: spacing.sm,
+    marginTop: spacing.screen,
+    marginBottom: spacing.md,
   },
   listContent: {
     paddingHorizontal: spacing.screen,
-    paddingTop: spacing.lg,
+    paddingTop: spacing.screen,
     paddingBottom: spacing.xxxl,
     flexGrow: 1,
   },
