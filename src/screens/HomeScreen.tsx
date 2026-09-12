@@ -43,45 +43,53 @@ export function HomeScreen() {
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
-      <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <BrandLogo />
-        <Text style={styles.subtitle}>{strings.home.tagline}</Text>
-        <LinearGradient
-          colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.divider}
-        />
-      </Animated.View>
-
-      <View style={styles.searchWrap}>
-        <SearchBar value={query} onChangeText={setQuery} placeholder={strings.home.searchPlaceholder} />
-      </View>
-
-      <CategoryTabs
-        options={CATEGORIES}
-        getLabel={(option) => t(CATEGORY_LABELS[option])}
-        allLabel={strings.common.all}
-        value={category}
-        onChange={setCategory}
-      />
-
       <FlatList
         keyboardShouldPersistTaps="handled"
         data={filteredRecipes}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <RecipeCard
-            recipe={item}
-            isFavorite={isFavorite(item.id)}
-            onPress={() => openRecipe(item.id)}
-            onToggleFavorite={() => toggleFavorite(item.id)}
-          />
+          <View style={styles.listItem}>
+            <RecipeCard
+              recipe={item}
+              isFavorite={isFavorite(item.id)}
+              onPress={() => openRecipe(item.id)}
+              onToggleFavorite={() => toggleFavorite(item.id)}
+            />
+          </View>
         )}
         ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
+        ListHeaderComponent={
+          <>
+            <Animated.View style={[styles.header, { opacity: headerFade }]}>
+              <BrandLogo />
+              <Text style={styles.subtitle}>{strings.home.tagline}</Text>
+              <LinearGradient
+                colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.divider}
+              />
+            </Animated.View>
+
+            <View style={styles.searchWrap}>
+              <SearchBar value={query} onChangeText={setQuery} placeholder={strings.home.searchPlaceholder} />
+            </View>
+
+            <CategoryTabs
+              options={CATEGORIES}
+              getLabel={(option) => t(CATEGORY_LABELS[option])}
+              allLabel={strings.common.all}
+              value={category}
+              onChange={setCategory}
+            />
+            <View style={styles.listHeaderSpacing} />
+          </>
+        }
         ListEmptyComponent={
-          <EmptyState emoji="🍹" title={strings.home.emptyTitle} subtitle={strings.home.emptySubtitle} />
+          <View style={styles.listItem}>
+            <EmptyState emoji="🍹" title={strings.home.emptyTitle} subtitle={strings.home.emptySubtitle} />
+          </View>
         }
         showsVerticalScrollIndicator={false}
       />
@@ -115,9 +123,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   listContent: {
-    paddingHorizontal: spacing.screen,
-    paddingTop: spacing.screen,
     paddingBottom: spacing.xxxl,
     flexGrow: 1,
   },
+  listItem: { paddingHorizontal: spacing.screen },
+  listHeaderSpacing: { height: spacing.screen },
 });

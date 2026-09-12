@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useRef, useState 
 import type { Locale } from '../types';
 import { localeStorage } from '../utils/storage';
 
-const DEFAULT_LOCALE: Locale = 'id';
+const DEFAULT_LOCALE: Locale = 'en';
 
 interface LocaleContextValue {
   locale: Locale;

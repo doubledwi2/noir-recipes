@@ -11,8 +11,8 @@ import { BrandLogo } from '../components/BrandLogo';
 import { useI18n } from '../i18n/useI18n';
 
 const LOCALE_OPTIONS: { value: Locale; badge: string }[] = [
-  { value: 'id', badge: 'ID' },
   { value: 'en', badge: 'EN' },
+  { value: 'id', badge: 'ID' },
 ];
 
 export function SettingsScreen() {

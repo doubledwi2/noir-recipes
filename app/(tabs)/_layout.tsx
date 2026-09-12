@@ -23,7 +23,7 @@ export default function TabsLayout() {
   const { strings } = useI18n();
 
   return (
-    <>
+    <View style={styles.tabsRoot}>
       <Tabs
         tabBar={(props) => (
           <View style={styles.navigation}>
@@ -56,11 +56,12 @@ export default function TabsLayout() {
         <Tabs.Screen name="favorites" options={{ title: strings.tabs.favorites }} />
         <Tabs.Screen name="settings" options={{ title: strings.tabs.settings }} />
       </Tabs>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  tabsRoot: { flex: 1, backgroundColor: colors.bg },
   tabBar: {
     backgroundColor: colors.bgElevated,
     borderTopWidth: 0,
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     marginBottom: -2,
   },
   activeLine: { position: 'absolute', top: -8, height: 1, width: 36 },
-  navigation: { backgroundColor: colors.bg },
+  navigation: { backgroundColor: 'transparent' },
   separator: {
     marginHorizontal: spacing.screen,
     height: StyleSheet.hairlineWidth,

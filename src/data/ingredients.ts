@@ -391,6 +391,27 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'wine_red', name: { id: 'Anggur Merah', en: 'Red Wine' }, type: 'Lainnya' },
   { id: 'wine_white', name: { id: 'Anggur Putih', en: 'White Wine' }, type: 'Lainnya' },
   { id: 'worchestershire_sauce', name: { id: 'Worcestershire Sauce', en: 'Worcestershire Sauce' }, type: 'Lainnya' },
+
+  // --- Ditambahkan buat batch Mocktail & Minuman Kekinian ---
+  { id: 'watermelon', name: { id: 'Semangka', en: 'Watermelon' }, type: 'Garnish' },
+  { id: 'mango', name: { id: 'Mangga', en: 'Mango' }, type: 'Garnish' },
+  { id: 'yogurt', name: { id: 'Yogurt', en: 'Yogurt' }, type: 'Mixer' },
+  { id: 'rose_syrup', name: { id: 'Sirup Mawar', en: 'Rose Syrup' }, type: 'Mixer' },
+  { id: 'lychee_juice', name: { id: 'Jus Leci', en: 'Lychee Juice' }, type: 'Mixer' },
+  { id: 'syrup_peach', name: { id: 'Sirup Persik', en: 'Peach Syrup' }, type: 'Mixer' },
+  { id: 'blue_syrup', name: { id: 'Sirup Biru (Blue Curacao Tanpa Alkohol)', en: 'Blue Syrup (Non-Alcoholic)' }, type: 'Mixer' },
+  { id: 'taro_powder', name: { id: 'Bubuk Taro', en: 'Taro Powder' }, type: 'Mixer' },
+  { id: 'matcha_powder', name: { id: 'Bubuk Matcha', en: 'Matcha Powder' }, type: 'Mixer' },
+  { id: 'thai_tea_powder', name: { id: 'Bubuk Thai Tea', en: 'Thai Tea Powder' }, type: 'Mixer' },
+  { id: 'boba_pearls', name: { id: 'Boba (Mutiara Tapioka)', en: 'Boba (Tapioca Pearls)' }, type: 'Mixer' },
+  { id: 'cincau', name: { id: 'Cincau', en: 'Grass Jelly' }, type: 'Mixer' },
+  { id: 'selasih', name: { id: 'Biji Selasih', en: 'Basil Seeds' }, type: 'Mixer' },
+  { id: 'cendol', name: { id: 'Cendol', en: 'Cendol (Pandan Rice Jelly)' }, type: 'Mixer' },
+  { id: 'young_coconut', name: { id: 'Kelapa Muda', en: 'Young Coconut Meat' }, type: 'Mixer' },
+  { id: 'milo_powder', name: { id: 'Bubuk Milo', en: 'Milo Powder' }, type: 'Mixer' },
+  { id: 'red_velvet_syrup', name: { id: 'Sirup Red Velvet', en: 'Red Velvet Syrup' }, type: 'Mixer' },
+  { id: 'cream_cheese_foam', name: { id: 'Krim Keju (Cheese Foam)', en: 'Cream Cheese Foam' }, type: 'Mixer' },
+  { id: 'syrup_hazelnut', name: { id: 'Sirup Hazelnut', en: 'Hazelnut Syrup' }, type: 'Mixer' },
 ];
 
 export const INGREDIENT_MAP: Record<string, Ingredient> = Object.fromEntries(
