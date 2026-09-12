@@ -3,7 +3,7 @@ import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RECIPES, CATEGORIES } from '../data/recipes';
-import type { RecipeCategory } from '../types';
+import type { Recipe, RecipeCategory } from '../types';
 import { colors } from '../theme/colors';
 import { spacing, typography } from '../theme/spacing';
 import { SearchBar } from '../components/SearchBar';
@@ -16,6 +16,18 @@ import { useOpenRecipe } from '../ads/InterstitialProvider';
 import { recipeMatchesQuery } from '../utils/search';
 import { CATEGORY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
+
+const ORIGINAL_RECIPE_INDEX = new Map(RECIPES.map((recipe, index) => [recipe.id, index]));
+
+function compareHomePopularity(a: Recipe, b: Recipe): number {
+  if (a.popularityScore !== b.popularityScore) {
+    if (a.popularityScore === undefined) return 1;
+    if (b.popularityScore === undefined) return -1;
+    return b.popularityScore - a.popularityScore;
+  }
+
+  return (ORIGINAL_RECIPE_INDEX.get(a.id) ?? 0) - (ORIGINAL_RECIPE_INDEX.get(b.id) ?? 0);
+}
 
 // Ad banner is now rendered once, globally, floating above the tab bar
 // on every screen -- see app/(tabs)/_layout.tsx. Don't add <BannerSlot />
@@ -35,10 +47,12 @@ export function HomeScreen() {
   }, []);
 
   const filteredRecipes = useMemo(() => {
-    return RECIPES.filter((recipe) => {
+    const filtered = RECIPES.filter((recipe) => {
       if (category && recipe.category !== category) return false;
       return recipeMatchesQuery(recipe, query, locale);
     });
+
+    return [...filtered].sort(compareHomePopularity);
   }, [query, category, locale]);
 
   return (

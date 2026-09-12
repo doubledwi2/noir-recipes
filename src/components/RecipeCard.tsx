@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { Recipe } from '../types';
@@ -6,6 +6,7 @@ import { colors } from '../theme/colors';
 import { radius, spacing, typography } from '../theme/spacing';
 import { CATEGORY_LABELS, DIFFICULTY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
+import { FavoriteButton } from './FavoriteButton';
 
 interface Props {
   recipe: Recipe;
@@ -22,6 +23,15 @@ interface Props {
 export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note }: Props) {
   const { t, strings } = useI18n();
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const entryOpacity = useRef(new Animated.Value(0)).current;
+  const entryTranslateY = useRef(new Animated.Value(10)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(entryOpacity, { toValue: 1, duration: 280, useNativeDriver: true }),
+      Animated.spring(entryTranslateY, { toValue: 0, friction: 9, useNativeDriver: true }),
+    ]).start();
+  }, [entryOpacity, entryTranslateY]);
 
   const onPressIn = () => {
     Animated.spring(scaleAnim, { toValue: 0.98, friction: 8, useNativeDriver: true }).start();
@@ -31,7 +41,9 @@ export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note
   };
 
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+    <Animated.View
+      style={{ opacity: entryOpacity, transform: [{ translateY: entryTranslateY }, { scale: scaleAnim }] }}
+    >
       <Pressable
         onPress={onPress}
         onPressIn={onPressIn}
@@ -50,19 +62,7 @@ export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note
               </Text>
             ) : null}
           </View>
-          <Pressable
-            onPress={(event) => { event.stopPropagation(); onToggleFavorite(); }}
-            hitSlop={8}
-            style={[styles.favoriteButton, isFavorite && styles.favoriteButtonActive]}
-            accessibilityRole="button"
-            accessibilityLabel={isFavorite ? strings.favoriteButton.remove : strings.favoriteButton.add}
-          >
-            <Ionicons
-              name={isFavorite ? 'heart' : 'heart-outline'}
-              size={16}
-              color={isFavorite ? colors.gold : colors.textSecondary}
-            />
-          </Pressable>
+          <FavoriteButton isFavorite={isFavorite} onToggle={onToggleFavorite} size={32} />
         </View>
 
         <View style={styles.metaRow}>
@@ -110,18 +110,6 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginTop: 4,
     letterSpacing: 0,
-  },
-  favoriteButton: {
-    width: 32,
-    height: 32,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  favoriteButtonActive: {
-    borderColor: colors.gold,
   },
   metaRow: {
     flexDirection: 'row',

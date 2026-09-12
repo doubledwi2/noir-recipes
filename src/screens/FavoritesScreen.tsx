@@ -50,11 +50,14 @@ export function FavoritesScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <View style={styles.emptyIconWrap}>
-              <Ionicons name="heart" size={32} color={colors.gold} />
+              <Ionicons name="heart" size={36} color={colors.gold} />
             </View>
             <Text style={styles.emptyTitle}>{strings.favorites.emptyTitle}</Text>
             <Text style={styles.emptySubtitle}>{strings.favorites.emptySubtitle}</Text>
-            <Pressable onPress={() => router.push('/')} style={styles.emptyCtaWrap}>
+            <Pressable
+              onPress={() => router.push('/')}
+              style={({ pressed }) => [styles.emptyCtaWrap, pressed && styles.emptyCtaPressed]}
+            >
               <LinearGradient
                 colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
                 start={{ x: 0, y: 0 }}
@@ -89,7 +92,8 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 1,
-    borderColor: colors.goldOverlay15,
+    borderColor: colors.gold,
+    backgroundColor: colors.goldOverlay12,
     alignItems: 'center',
     justifyContent: 'center',
     ...shadows.goldGlow,
@@ -103,6 +107,7 @@ const styles = StyleSheet.create({
     maxWidth: 260,
   },
   emptyCtaWrap: { marginTop: spacing.xl },
+  emptyCtaPressed: { opacity: 0.84, transform: [{ scale: 0.98 }] },
   emptyCta: {
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,

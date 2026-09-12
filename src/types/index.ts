@@ -72,6 +72,9 @@ export interface Recipe {
   glassType: GlassTypeId;
   difficulty: Difficulty;
   prepTimeMinutes: number;
+  // Local editorial ranking used only to order the Home catalog. This is a
+  // relative score, not a view count or externally sourced popularity claim.
+  popularityScore?: number;
   ingredients: RecipeIngredient[];
   steps: LocalizedText[];
   videoUrl?: string;

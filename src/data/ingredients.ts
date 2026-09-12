@@ -412,6 +412,26 @@ export const INGREDIENTS: Ingredient[] = [
   { id: 'red_velvet_syrup', name: { id: 'Sirup Red Velvet', en: 'Red Velvet Syrup' }, type: 'Mixer' },
   { id: 'cream_cheese_foam', name: { id: 'Krim Keju (Cheese Foam)', en: 'Cream Cheese Foam' }, type: 'Mixer' },
   { id: 'syrup_hazelnut', name: { id: 'Sirup Hazelnut', en: 'Hazelnut Syrup' }, type: 'Mixer' },
+
+  // --- Batch 3: Mocktail & Minuman Kekinian (persiapan launch) ---
+  { id: 'grape_juice', name: { id: 'Jus Anggur', en: 'Grape Juice' }, type: 'Mixer' },
+  { id: 'lavender_syrup', name: { id: 'Sirup Lavender', en: 'Lavender Syrup' }, type: 'Mixer' },
+  { id: 'kiwi', name: { id: 'Kiwi', en: 'Kiwi' }, type: 'Garnish' },
+  { id: 'sage', name: { id: 'Daun Sage', en: 'Sage' }, type: 'Garnish' },
+  { id: 'hibiscus_syrup', name: { id: 'Sirup Bunga Rosela', en: 'Hibiscus Syrup' }, type: 'Mixer' },
+  { id: 'guava_juice', name: { id: 'Jus Jambu Biji', en: 'Guava Juice' }, type: 'Mixer' },
+  { id: 'tamarind_syrup', name: { id: 'Sirup Asam Jawa', en: 'Tamarind Syrup' }, type: 'Mixer' },
+  { id: 'cantaloupe', name: { id: 'Melon Cantaloupe', en: 'Cantaloupe' }, type: 'Garnish' },
+  { id: 'blueberry', name: { id: 'Bluberi', en: 'Blueberry' }, type: 'Garnish' },
+  { id: 'pear_juice', name: { id: 'Jus Pir', en: 'Pear Juice' }, type: 'Mixer' },
+  { id: 'coconut_water', name: { id: 'Air Kelapa', en: 'Coconut Water' }, type: 'Mixer' },
+  { id: 'cherry_syrup', name: { id: 'Sirup Ceri', en: 'Cherry Syrup' }, type: 'Mixer' },
+  { id: 'lemongrass', name: { id: 'Serai', en: 'Lemongrass' }, type: 'Garnish' },
+  { id: 'pandan_syrup', name: { id: 'Sirup Pandan', en: 'Pandan Syrup' }, type: 'Mixer' },
+  { id: 'lychee_jelly', name: { id: 'Jeli Leci', en: 'Lychee Jelly' }, type: 'Mixer' },
+  { id: 'ube', name: { id: 'Ubi Ungu', en: 'Purple Sweet Potato (Ube)' }, type: 'Mixer' },
+  { id: 'oat_milk', name: { id: 'Susu Oat', en: 'Oat Milk' }, type: 'Mixer' },
+  { id: 'yakult', name: { id: 'Yakult', en: 'Yakult' }, type: 'Mixer' },
 ];
 
 export const INGREDIENT_MAP: Record<string, Ingredient> = Object.fromEntries(

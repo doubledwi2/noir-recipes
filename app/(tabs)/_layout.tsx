@@ -1,7 +1,7 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Tabs } from 'expo-router';
-import { BottomTabBar } from 'expo-router/tabs';
+import { BottomTabBar, type BottomTabBarProps } from 'expo-router/tabs';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,6 +18,35 @@ const TAB_ICONS: Record<string, { active: keyof typeof Ionicons.glyphMap; inacti
   settings: { active: 'settings', inactive: 'settings-outline' },
 };
 
+function PremiumBottomTabBar(props: BottomTabBarProps) {
+  const { width } = useWindowDimensions();
+  const indicatorX = useRef(new Animated.Value(0)).current;
+  const itemWidth = width / props.state.routes.length;
+
+  useEffect(() => {
+    Animated.spring(indicatorX, {
+      toValue: props.state.index * itemWidth + (itemWidth - 36) / 2,
+      friction: 9,
+      tension: 90,
+      useNativeDriver: true,
+    }).start();
+  }, [indicatorX, itemWidth, props.state.index]);
+
+  return (
+    <View style={styles.tabBarWrap}>
+      <Animated.View pointerEvents="none" style={[styles.activeLine, { transform: [{ translateX: indicatorX }] }]}>
+        <LinearGradient
+          colors={[...colors.gradientGold]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={StyleSheet.absoluteFill}
+        />
+      </Animated.View>
+      <BottomTabBar {...props} />
+    </View>
+  );
+}
+
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   const { strings } = useI18n();
@@ -29,7 +58,7 @@ export default function TabsLayout() {
           <View style={styles.navigation}>
             <View style={styles.adSlot}><BannerSlot /></View>
             <View style={styles.separator} />
-            <BottomTabBar {...props} />
+            <PremiumBottomTabBar {...props} />
           </View>
         )}
         screenOptions={({ route }) => ({
@@ -43,7 +72,6 @@ export default function TabsLayout() {
             const iconSet = TAB_ICONS[route.name] ?? TAB_ICONS.index;
             return (
               <View style={styles.iconWrap}>
-                {focused && <LinearGradient colors={[...colors.gradientGold]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.activeLine} />}
                 <Ionicons name={focused ? iconSet.active : iconSet.inactive} size={20} color={color} />
               </View>
             );
@@ -79,6 +107,7 @@ const styles = StyleSheet.create({
   tabItem: {
     gap: 2,
   },
+  tabBarWrap: { position: 'relative' },
   iconWrap: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -87,7 +116,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.sm,
     marginBottom: -2,
   },
-  activeLine: { position: 'absolute', top: -8, height: 1, width: 36 },
+  activeLine: { position: 'absolute', top: 0, left: 0, zIndex: 1, height: 1, width: 36 },
   navigation: { backgroundColor: 'transparent' },
   separator: {
     marginHorizontal: spacing.screen,

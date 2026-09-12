@@ -14,6 +14,7 @@ import { useFavorites } from '../context/FavoritesContext';
 import { useMyBar } from '../context/MyBarContext';
 import { CATEGORY_LABELS, GLASS_TYPE_LABELS, DIFFICULTY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
+import { BannerSlot } from '../ads/BannerSlot';
 
 // NOTE: the "Video Tutorial" section that used to live here has been
 // intentionally removed to match the current approved design (see
@@ -73,6 +74,15 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
           <Text style={styles.backLabel}>{strings.detail.backLabel}</Text>
         </Pressable>
 
+        <View style={styles.heroHalo}>
+          <View style={styles.heroOrbit} />
+          <View style={styles.heroHaloInner}>
+            <Ionicons name="wine-outline" size={30} color={colors.gold} />
+          </View>
+          <View style={[styles.heroSpark, styles.heroSparkTop]} />
+          <View style={[styles.heroSpark, styles.heroSparkBottom]} />
+        </View>
+
         <Text style={styles.category}>{t(CATEGORY_LABELS[recipe.category]).toUpperCase()}</Text>
         <Text style={styles.title}>{t(recipe.title)}</Text>
         {recipe.tagline ? <Text style={styles.tagline}>{t(recipe.tagline)}</Text> : null}
@@ -94,15 +104,15 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
           accessibilityRole="button"
           accessibilityState={{ selected: fav }}
           activeOpacity={0.85}
-          style={[styles.favButton, fav && styles.favButtonActive]}
+          style={styles.favButton}
         >
-          {fav && <LinearGradient colors={[...colors.gradientGold]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />}
+          <LinearGradient colors={[...colors.gradientGold]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
           <Ionicons
             name={fav ? 'heart' : 'heart-outline'}
             size={16}
-            color={fav ? colors.primaryForeground : colors.gold}
+            color={colors.primaryForeground}
           />
-          <Text style={[styles.favButtonText, fav && styles.favButtonTextActive]}>
+          <Text style={styles.favButtonText}>
             {fav ? strings.detail.favSaved : strings.detail.favSave}
           </Text>
         </TouchableOpacity>
@@ -159,6 +169,10 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
             </View>
           </Section>
         )}
+
+        <View style={styles.detailAd}>
+          <BannerSlot />
+        </View>
       </Animated.View>
     </ScrollView>
   );
@@ -178,6 +192,38 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: spacing.screen, paddingTop: spacing.xxxl, paddingBottom: spacing.xxxl },
   backRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs + 2, marginBottom: spacing.xl },
   backLabel: { ...typography.body, color: colors.textSecondary },
+  heroHalo: {
+    width: 96,
+    height: 96,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.xl,
+  },
+  heroOrbit: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    borderRadius: 48,
+    borderWidth: 1,
+    borderColor: colors.goldOverlay15,
+  },
+  heroHaloInner: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.gold,
+    backgroundColor: colors.goldOverlay12,
+    ...shadows.goldGlow,
+  },
+  heroSpark: { position: 'absolute', width: 5, height: 5, borderRadius: 3, backgroundColor: colors.goldLight },
+  heroSparkTop: { top: 7, right: 17 },
+  heroSparkBottom: { bottom: 9, left: 15, opacity: 0.7 },
   category: { ...typography.goldLabel, color: colors.gold, opacity: 0.8 },
   title: { ...typography.display, fontSize: 36, lineHeight: 40, color: colors.textPrimary, marginTop: spacing.xs + 2 },
   tagline: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xs + 2 },
@@ -204,14 +250,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.goldOverlay15,
     paddingVertical: spacing.md,
-  },
-  favButtonActive: {
-    backgroundColor: colors.gold,
-    borderColor: colors.gold,
     ...shadows.goldGlow,
   },
-  favButtonText: { ...typography.bodyStrong, color: colors.gold },
-  favButtonTextActive: { color: colors.primaryForeground },
+  favButtonText: { ...typography.bodyStrong, color: colors.primaryForeground },
   section: { marginTop: spacing.xxl },
   sectionTitle: { ...typography.h2, fontSize: 24, lineHeight: 32, color: colors.textPrimary, marginBottom: spacing.md },
   ingredientsCard: {
@@ -249,4 +290,5 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   notesText: { color: colors.textSecondary, fontSize: 13, lineHeight: 20, fontStyle: 'italic' },
+  detailAd: { marginTop: spacing.xxl },
 });

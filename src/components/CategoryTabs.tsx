@@ -1,5 +1,5 @@
-import React from 'react';
-import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { colors, shadows } from '../theme/colors';
 import { radius, spacing } from '../theme/spacing';
 
@@ -34,33 +34,63 @@ export function CategoryTabs<T extends string>({ options, getLabel, allLabel, va
 }
 
 function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
+  const selection = useRef(new Animated.Value(selected ? 1 : 0)).current;
+
+  useEffect(() => {
+    Animated.timing(selection, {
+      toValue: selected ? 1 : 0,
+      duration: 180,
+      useNativeDriver: false,
+    }).start();
+  }, [selected, selection]);
+
+  const backgroundColor = selection.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['rgba(233, 190, 87, 0)', colors.goldOverlay15],
+  });
+  const borderColor = selection.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.border, colors.gold],
+  });
+  const textColor = selection.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.textSecondary, colors.gold],
+  });
+
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      style={({ pressed }) => [
-        styles.chip,
-        selected && styles.chipSelected,
-        pressed && { opacity: 0.85 },
-      ]}
+      style={({ pressed }) => [styles.chipPressable, pressed && styles.chipPressed]}
     >
-      <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{label}</Text>
+      <Animated.View style={[styles.chip, { backgroundColor, borderColor }]}>
+        <Animated.View pointerEvents="none" style={[styles.chipGlow, { opacity: selection }]} />
+        <Animated.Text style={[styles.chipText, { color: textColor }]}>{label}</Animated.Text>
+      </Animated.View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   container: { gap: spacing.sm, paddingHorizontal: spacing.screen, paddingVertical: spacing.xs },
+  chipPressable: { borderRadius: radius.pill },
+  chipPressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
   chip: {
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
     borderWidth: 1,
-    borderColor: colors.border,
+    overflow: 'visible',
   },
-  chipSelected: {
-    backgroundColor: colors.goldOverlay15,
+  chipGlow: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    borderRadius: radius.pill,
+    borderWidth: 1,
     borderColor: colors.gold,
     ...shadows.goldGlow,
   },
@@ -68,9 +98,5 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans_500Medium',
     fontSize: 12,
     fontWeight: '500',
-    color: colors.textSecondary,
-  },
-  chipTextSelected: {
-    color: colors.gold,
   },
 });

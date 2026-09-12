@@ -27,9 +27,8 @@ function UnsupportedPlaceholder() {
   );
 }
 
-// Rendered once, globally, in app/(tabs)/_layout.tsx -- floats above the
-// tab bar on every screen. Don't render this inline inside individual
-// screens anymore.
+// Rendered globally for tab routes in app/(tabs)/_layout.tsx. Routes outside
+// that navigator, such as recipe detail, can render their own single slot.
 export function BannerSlot() {
   const { width } = useWindowDimensions();
   if (!AdsModule) return <UnsupportedPlaceholder />;
