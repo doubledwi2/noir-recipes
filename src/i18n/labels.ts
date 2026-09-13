@@ -32,4 +32,9 @@ export const GLASS_TYPE_LABELS: Record<GlassTypeId, LocalizedText> = {
   'mule-mug': { id: 'Mug Mule (atau Gelas Tinggi)', en: 'Mule Mug (or Highball)' },
   tiki: { id: 'Gelas Tiki', en: 'Tiki Glass' },
   'wine-glass': { id: 'Gelas Wine', en: 'Wine Glass' },
+  collins: { id: 'Gelas Collins', en: 'Collins Glass' },
+  margarita: { id: 'Gelas Margarita', en: 'Margarita Glass' },
+  snifter: { id: 'Gelas Snifter', en: 'Snifter Glass' },
+  pitcher: { id: 'Pitcher (buat porsi banyak)', en: 'Pitcher (batch serving)' },
+  bowl: { id: 'Mangkuk Punch', en: 'Punch Bowl' },
 };

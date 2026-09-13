@@ -14,6 +14,9 @@
     },
     "android": {
       "package": "com.noirdmix.drinkrecipes",
+      "blockedPermissions": [
+        "android.permission.READ_MEDIA_IMAGES"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#14100E",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -30,6 +33,7 @@
       [
         "expo-splash-screen",
         {
+          "image": "./assets/splash-icon.png",
           "backgroundColor": "#14100E",
           "resizeMode": "contain"
         }
@@ -42,6 +46,12 @@
         }
       ],
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0de04d95-1d06-4df7-a601-f14547b7d1a9"
+      }
+    }
   }
 }
