@@ -14,6 +14,9 @@
     },
     "android": {
       "package": "com.noirdmix.drinkrecipes",
+      "blockedPermissions": [
+        "android.permission.READ_MEDIA_IMAGES"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#14100E",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -30,7 +33,6 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/splash-icon.png",
           "backgroundColor": "#14100E",
           "resizeMode": "contain"
         }
