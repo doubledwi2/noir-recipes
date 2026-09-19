@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.textMuted,
     letterSpacing: 0,
-    marginTop: -spacing.xs,
+    marginTop: spacing.xs,
     marginBottom: spacing.xs,
     marginLeft: spacing.xs,
   },
