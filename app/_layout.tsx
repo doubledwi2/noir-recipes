@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -21,6 +21,7 @@ import { InterstitialProvider } from '../src/ads/InterstitialProvider';
 import { AdsModule } from '../src/ads/adsModule';
 import { LocaleProvider } from '../src/i18n/LocaleContext';
 import { colors } from '../src/theme/colors';
+import { LoadingScreen } from '../src/components/LoadingScreen';
 
 // Keep the native splash screen up until both font families finish loading,
 // so there's no flash of the wrong font (serif titles briefly in system
@@ -28,6 +29,8 @@ import { colors } from '../src/theme/colors';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
+  const [showIntro, setShowIntro] = useState(true);
+
   useEffect(() => {
     if (!AdsModule) return;
     AdsModule.default()
@@ -65,7 +68,7 @@ export default function RootLayout() {
                 <Stack.Screen
                   name="recipe/[id]"
                   options={{
-                    headerShown: true,
+                    headerShown: false,
                     headerTitle: '',
                     headerTransparent: true,
                     headerTintColor: colors.textPrimary,
@@ -73,6 +76,7 @@ export default function RootLayout() {
                   }}
                 />
               </Stack>
+              {showIntro && <LoadingScreen onFinish={() => setShowIntro(false)} />}
             </InterstitialProvider>
           </MyBarProvider>
         </FavoritesProvider>

@@ -11,8 +11,8 @@ import { BrandLogo } from '../components/BrandLogo';
 import { useI18n } from '../i18n/useI18n';
 
 const LOCALE_OPTIONS: { value: Locale; badge: string }[] = [
-  { value: 'id', badge: 'ID' },
   { value: 'en', badge: 'EN' },
+  { value: 'id', badge: 'ID' },
 ];
 
 export function SettingsScreen() {
@@ -35,7 +35,7 @@ export function SettingsScreen() {
       <View style={styles.section}>
         <View style={styles.sectionHeadRow}>
           <Ionicons name="language-outline" size={16} color={colors.gold} />
-          <View>
+          <View style={styles.sectionHeadText}>
             <Text style={styles.sectionLabel}>{strings.settings.languageSectionTitle}</Text>
             <Text style={styles.sectionHint}>{strings.settings.languageHint}</Text>
           </View>
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: spacing.screen, paddingBottom: spacing.xxxl },
   section: { marginTop: spacing.xl },
   sectionHeadRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  sectionHeadText: { flex: 1 },
   sectionLabel: { ...typography.h2, color: colors.textPrimary },
   sectionHint: { ...typography.small, color: colors.textMuted, letterSpacing: 0, marginTop: 2 },
   optionsWrap: { gap: spacing.sm, marginTop: spacing.md },

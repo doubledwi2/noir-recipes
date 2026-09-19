@@ -2,23 +2,27 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import * as ScreenCapture from 'expo-screen-capture';
 import { RECIPE_MAP } from '../data/recipes';
 import { INGREDIENT_MAP } from '../data/ingredients';
 import { colors, shadows } from '../theme/colors';
 import { radius, spacing, typography } from '../theme/spacing';
-import { FavoriteButton } from '../components/FavoriteButton';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IngredientRow } from '../components/IngredientRow';
 import { EmptyState } from '../components/EmptyState';
 import { useFavorites } from '../context/FavoritesContext';
 import { useMyBar } from '../context/MyBarContext';
 import { CATEGORY_LABELS, GLASS_TYPE_LABELS, DIFFICULTY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
+import { BannerSlot } from '../ads/BannerSlot';
 
 // NOTE: the "Video Tutorial" section that used to live here has been
 // intentionally removed to match the current approved design (see
 // Lovable plan: hapus-video-tutorial-dan-tambah-upgrade-pro). Recipe data
 // may still carry a `videoUrl` field -- it's just not rendered anymore.
 export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
+  const insets = useSafeAreaInsets();
   const recipe = RECIPE_MAP[recipeId];
   const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -39,6 +43,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const contentSlide = useRef(new Animated.Value(16)).current;
 
   useEffect(() => {
+    setCompletedSteps(new Set());
     if (recipe) {
       Animated.parallel([
         Animated.timing(contentFade, { toValue: 1, duration: 400, useNativeDriver: true }),
@@ -46,6 +51,19 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
       ]).start();
     }
   }, [recipeId]);
+
+  // Blocks screenshots/screen recording while this screen is open (Android:
+  // FLAG_SECURE, so it also hides from the recent-apps thumbnail; iOS just
+  // gets a best-effort capture-detected event, there's no OS-level block).
+  // Scoped to mount/unmount of this screen only -- other screens are
+  // unaffected. See discussion: protecting premium recipe content from
+  // mass screenshotting after a Pro subscription is cancelled.
+  useEffect(() => {
+    ScreenCapture.preventScreenCaptureAsync();
+    return () => {
+      ScreenCapture.allowScreenCaptureAsync();
+    };
+  }, []);
 
   if (!recipe) {
     return <EmptyState emoji="🚫" title={strings.detail.notFoundTitle} />;
@@ -61,14 +79,23 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   return (
     <ScrollView
       style={styles.screen}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingTop: insets.top + spacing.xl, paddingBottom: insets.bottom + spacing.xxxl }]}
       showsVerticalScrollIndicator={false}
     >
       <Animated.View style={{ opacity: contentFade, transform: [{ translateY: contentSlide }] }}>
-        <Pressable onPress={() => router.back()} hitSlop={8} style={styles.backRow}>
+        <Pressable onPress={() => router.canGoBack() ? router.back() : router.replace("/")} hitSlop={8} style={styles.backRow}>
           <Ionicons name="arrow-back" size={18} color={colors.textSecondary} />
           <Text style={styles.backLabel}>{strings.detail.backLabel}</Text>
         </Pressable>
+
+        <View style={styles.heroHalo}>
+          <View style={styles.heroOrbit} />
+          <View style={styles.heroHaloInner}>
+            <Ionicons name="wine-outline" size={30} color={colors.gold} />
+          </View>
+          <View style={[styles.heroSpark, styles.heroSparkTop]} />
+          <View style={[styles.heroSpark, styles.heroSparkBottom]} />
+        </View>
 
         <Text style={styles.category}>{t(CATEGORY_LABELS[recipe.category]).toUpperCase()}</Text>
         <Text style={styles.title}>{t(recipe.title)}</Text>
@@ -88,15 +115,18 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
 
         <TouchableOpacity
           onPress={() => toggleFavorite(recipe.id)}
+          accessibilityRole="button"
+          accessibilityState={{ selected: fav }}
           activeOpacity={0.85}
-          style={[styles.favButton, fav && styles.favButtonActive]}
+          style={styles.favButton}
         >
+          <LinearGradient colors={[...colors.gradientGold]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
           <Ionicons
             name={fav ? 'heart' : 'heart-outline'}
             size={16}
-            color={fav ? colors.primaryForeground : colors.gold}
+            color={colors.primaryForeground}
           />
-          <Text style={[styles.favButtonText, fav && styles.favButtonTextActive]}>
+          <Text style={styles.favButtonText}>
             {fav ? strings.detail.favSaved : strings.detail.favSave}
           </Text>
         </TouchableOpacity>
@@ -129,6 +159,9 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
                 key={index}
                 style={styles.stepRow}
                 onPress={() => toggleStep(index)}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: isCompleted }}
+                accessibilityLabel={t(step)}
                 activeOpacity={0.7}
               >
                 <View style={[styles.stepNumber, isCompleted && styles.stepNumberCompleted]}>
@@ -150,6 +183,10 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
             </View>
           </Section>
         )}
+
+        <View style={styles.detailAd}>
+          <BannerSlot />
+        </View>
       </Animated.View>
     </ScrollView>
   );
@@ -167,12 +204,44 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   content: { paddingHorizontal: spacing.screen, paddingTop: spacing.xxxl, paddingBottom: spacing.xxxl },
-  backRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs + 2, marginBottom: spacing.md },
+  backRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs + 2, marginBottom: spacing.xl },
   backLabel: { ...typography.body, color: colors.textSecondary },
+  heroHalo: {
+    width: 96,
+    height: 96,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.xl,
+  },
+  heroOrbit: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    borderRadius: 48,
+    borderWidth: 1,
+    borderColor: colors.goldOverlay15,
+  },
+  heroHaloInner: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.gold,
+    backgroundColor: colors.goldOverlay12,
+    ...shadows.goldGlow,
+  },
+  heroSpark: { position: 'absolute', width: 5, height: 5, borderRadius: 3, backgroundColor: colors.goldLight },
+  heroSparkTop: { top: 7, right: 17 },
+  heroSparkBottom: { bottom: 9, left: 15, opacity: 0.7 },
   category: { ...typography.goldLabel, color: colors.gold, opacity: 0.8 },
-  title: { ...typography.display, color: colors.textPrimary, marginTop: spacing.xs + 2 },
+  title: { ...typography.display, fontSize: 36, lineHeight: 40, color: colors.textPrimary, marginTop: spacing.xs + 2 },
   tagline: { ...typography.body, color: colors.textSecondary, marginTop: spacing.xs + 2 },
-  statsRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.lg },
+  statsRow: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.screen },
   statBox: {
     flex: 1,
     alignItems: 'center',
@@ -183,37 +252,32 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     paddingVertical: spacing.md,
   },
-  statLabel: { ...typography.small, color: colors.textSecondary, letterSpacing: 0 },
+  statLabel: { ...typography.small, color: colors.textSecondary, letterSpacing: 0, maxWidth: '100%', textAlign: 'center' },
   favButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.xs + 2,
-    marginTop: spacing.md,
+    marginTop: spacing.lg,
+    overflow: 'hidden',
     borderRadius: radius.pill,
     borderWidth: 1,
     borderColor: colors.goldOverlay15,
     paddingVertical: spacing.md,
-  },
-  favButtonActive: {
-    backgroundColor: colors.gold,
-    borderColor: colors.gold,
     ...shadows.goldGlow,
   },
-  favButtonText: { ...typography.bodyStrong, color: colors.gold },
-  favButtonTextActive: { color: colors.primaryForeground },
+  favButtonText: { ...typography.bodyStrong, color: colors.primaryForeground },
   section: { marginTop: spacing.xxl },
-  sectionTitle: { ...typography.h2, color: colors.textPrimary, marginBottom: spacing.md },
+  sectionTitle: { ...typography.h2, fontSize: 24, lineHeight: 32, color: colors.textPrimary, marginBottom: spacing.md },
   ingredientsCard: {
     backgroundColor: colors.surface,
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.border,
-    padding: spacing.md,
-    ...shadows.subtle,
+    paddingHorizontal: spacing.lg,
   },
   ingredientSeparator: { height: 1, backgroundColor: colors.border, marginVertical: 2 },
-  stepRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.md },
+  stepRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.md, padding: spacing.lg, borderRadius: radius.card, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   stepNumber: {
     width: 28,
     height: 28,
@@ -230,7 +294,7 @@ const styles = StyleSheet.create({
   },
   stepNumberText: { color: colors.gold, fontSize: 12, fontWeight: '700' },
   stepNumberTextCompleted: { color: colors.primaryForeground },
-  stepText: { flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 22 },
+  stepText: { ...typography.body, flex: 1, color: colors.textSecondary, fontSize: 14, lineHeight: 22 },
   stepTextCompleted: { color: colors.textMuted, textDecorationLine: 'line-through' },
   notesCard: {
     backgroundColor: colors.goldOverlay12,
@@ -240,4 +304,5 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   notesText: { color: colors.textSecondary, fontSize: 13, lineHeight: 20, fontStyle: 'italic' },
+  detailAd: { marginTop: spacing.xxl },
 });

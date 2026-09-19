@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Animated, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, shadows } from '../theme/colors';
@@ -15,36 +15,57 @@ interface Props {
 export function FavoriteButton({ isFavorite, onToggle, size = 36 }: Props) {
   const { strings } = useI18n();
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const pulseAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (isFavorite) {
-      Animated.sequence([
-        Animated.spring(scaleAnim, { toValue: 1.2, friction: 4, tension: 120, useNativeDriver: true }),
-        Animated.spring(scaleAnim, { toValue: 1, friction: 6, useNativeDriver: true }),
+      pulseAnim.setValue(0);
+      Animated.parallel([
+        Animated.sequence([
+          Animated.spring(scaleAnim, { toValue: 1.2, friction: 4, tension: 120, useNativeDriver: true }),
+          Animated.spring(scaleAnim, { toValue: 1, friction: 6, useNativeDriver: true }),
+        ]),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 420, useNativeDriver: true }),
       ]).start();
     }
-  }, [isFavorite]);
+  }, [isFavorite, pulseAnim, scaleAnim]);
 
-  const handlePress = () => {
-    Animated.sequence([
-      Animated.spring(scaleAnim, { toValue: 0.85, friction: 6, useNativeDriver: true }),
-      Animated.spring(scaleAnim, { toValue: 1, friction: 6, useNativeDriver: true }),
-    ]).start();
-    onToggle();
+  const onPressIn = () => {
+    Animated.spring(scaleAnim, { toValue: 0.88, friction: 7, useNativeDriver: true }).start();
   };
+
+  const onPressOut = () => {
+    Animated.spring(scaleAnim, { toValue: 1, friction: 7, useNativeDriver: true }).start();
+  };
+
+  const pulseScale = pulseAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 1.55] });
+  const pulseOpacity = pulseAnim.interpolate({ inputRange: [0, 0.35, 1], outputRange: [0, 0.5, 0] });
 
   return (
     <Pressable
-      onPress={handlePress}
+      onPress={(event) => {
+        event.stopPropagation();
+        onToggle();
+      }}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
       hitSlop={8}
-      style={[
+      style={({ pressed }) => [
         styles.button,
         { width: size, height: size, borderRadius: size / 2 },
         isFavorite && styles.buttonActive,
+        pressed && styles.buttonPressed,
       ]}
       accessibilityRole="button"
       accessibilityLabel={isFavorite ? strings.favoriteButton.remove : strings.favoriteButton.add}
     >
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.pulse,
+          { borderRadius: size / 2, opacity: pulseOpacity, transform: [{ scale: pulseScale }] },
+        ]}
+      />
       <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
         <Ionicons
           name={isFavorite ? 'heart' : 'heart-outline'}
@@ -65,6 +86,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   buttonActive: {
+    borderColor: colors.gold,
+    ...shadows.goldGlow,
+  },
+  buttonPressed: { backgroundColor: colors.goldOverlay12 },
+  pulse: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    borderWidth: 1,
     borderColor: colors.gold,
     ...shadows.goldGlow,
   },
