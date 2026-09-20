@@ -10,6 +10,7 @@ export const RECIPES: Recipe[] = [
   // Cocktail Recipe Bible version below, which is the more complete source).
   {
     id: 'rum-daiquiri',
+    isFree: true,
     title: { id: 'Rum Daiquiri Klasik', en: 'Classic Rum Daiquiri' },
     category: 'Cocktail',
     tags: [
@@ -34,6 +35,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'virgin-mojito',
+    isFree: true,
     title: { id: 'Virgin Mojito', en: 'Virgin Mojito' },
     category: 'Mocktail',
     tags: [
@@ -60,6 +62,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-kopi-susu-gula-aren',
+    isFree: true,
     title: { id: 'Es Kopi Susu Gula Aren', en: 'Iced Palm Sugar Coffee Milk' },
     category: 'Minuman Kekinian',
     tags: [
@@ -85,6 +88,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'soda-gembira',
+    isFree: true,
     title: { id: 'Soda Gembira', en: 'Soda Gembira (Happy Soda)' },
     category: 'Minuman Kekinian',
     tags: [
@@ -112,6 +116,7 @@ export const RECIPES: Recipe[] = [
   // recipes/ratios, merged in on top of the original demo set above.
   {
     id: 'dry-martini',
+    isFree: true,
     title: { id: 'Dry Martini', en: 'Dry Martini' },
     category: 'Cocktail',
     tags: [
@@ -226,6 +231,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'hemingway-daiquiri',
+    isFree: true,
     title: { id: 'Hemingway Daiquiri', en: 'Hemingway Daiquiri' },
     category: 'Cocktail',
     tags: [
@@ -292,6 +298,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'el-diablo',
+    isFree: true,
     title: { id: 'El Diablo', en: 'El Diablo' },
     category: 'Cocktail',
     tags: [
@@ -315,6 +322,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'matador',
+    isFree: true,
     title: { id: 'Matador', en: 'Matador' },
     category: 'Cocktail',
     tags: [
@@ -336,6 +344,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'espresso-martini-bible',
+    isFree: true,
     title: { id: 'Espresso Martini', en: 'Espresso Martini' },
     category: 'Cocktail',
     tags: [
@@ -360,6 +369,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'french-martini',
+    isFree: true,
     title: { id: 'French Martini', en: 'French Martini' },
     category: 'Cocktail',
     tags: [
@@ -408,6 +418,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'alexander',
+    isFree: true,
     title: { id: 'Alexander', en: 'Alexander' },
     category: 'Cocktail',
     tags: [
@@ -431,6 +442,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'aperol-spritz',
+    isFree: true,
     title: { id: 'Aperol Spritz', en: 'Aperol Spritz' },
     category: 'Cocktail',
     tags: [
@@ -453,6 +465,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'french-75-royale',
+    isFree: true,
     title: { id: 'French 75 Royale', en: 'French 75 Royale' },
     category: 'Cocktail',
     tags: [
@@ -501,6 +514,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'jamaican-mule',
+    isFree: true,
     title: { id: 'Jamaican Mule', en: 'Jamaican Mule' },
     category: 'Cocktail',
     tags: [
@@ -522,6 +536,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'americano',
+    isFree: true,
     title: { id: 'Americano', en: 'Americano' },
     category: 'Cocktail',
     tags: [
@@ -544,6 +559,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'boulevardier-spritz',
+    isFree: true,
     title: { id: 'Boulevardier Spritz', en: 'Boulevardier Spritz' },
     category: 'Cocktail',
     tags: [
@@ -592,6 +608,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'south-seas',
+    isFree: true,
     title: { id: 'South Seas', en: 'South Seas' },
     category: 'Cocktail',
     tags: [
@@ -615,6 +632,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'new-york-lemonade',
+    isFree: true,
     title: { id: 'New York Lemonade', en: 'New York Lemonade' },
     category: 'Cocktail',
     tags: [
@@ -662,6 +680,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'white-russian-espresso',
+    isFree: true,
     title: { id: 'White Russian Espresso', en: 'White Russian Espresso' },
     category: 'Cocktail',
     tags: [
@@ -685,6 +704,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'coffee-negroni',
+    isFree: true,
     title: { id: 'Coffee Negroni', en: 'Coffee Negroni' },
     category: 'Cocktail',
     tags: [
@@ -708,6 +728,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'black-manhattan-coffee',
+    isFree: true,
     title: { id: 'Black Manhattan Coffee', en: 'Black Manhattan Coffee' },
     category: 'Cocktail',
     tags: [
@@ -821,6 +842,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'campari-soda',
+    isFree: true,
     title: { id: 'Campari Soda', en: 'Campari Soda' },
     category: 'Cocktail',
     tags: [
@@ -841,6 +863,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'vermouth-tonic',
+    isFree: true,
     title: { id: 'Vermouth Tonic', en: 'Vermouth Tonic' },
     category: 'Cocktail',
     tags: [
@@ -917,6 +940,7 @@ export const RECIPES: Recipe[] = [
   // --- 363 resep dari dataset riset (menggantikan versi lama yang judulnya sama) ---
   {
     id: 'margarita',
+    isFree: true,
     title: { id: 'Margarita', en: 'Margarita' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -939,6 +963,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'french_connection',
+    isFree: true,
     title: { id: 'French Connection', en: 'French Connection' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -1175,6 +1200,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'gin_fizz',
+    isFree: true,
     title: { id: 'Gin Fizz', en: 'Gin Fizz' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -1223,6 +1249,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'martini',
+    isFree: true,
     title: { id: 'Martini Dry', en: 'Martini Dry' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -1289,6 +1316,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'sweet_martini',
+    isFree: true,
     title: { id: 'Martini Sweet', en: 'Martini Sweet' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -1310,6 +1338,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'negroni',
+    isFree: true,
     title: { id: 'Negroni', en: 'Negroni' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -1354,6 +1383,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'cuba_libre',
+    isFree: true,
     title: { id: 'Cuba Libre', en: 'Cuba Libre' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -1416,6 +1446,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'daiquiri',
+    isFree: true,
     title: { id: 'Daiquiri', en: 'Daiquiri' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -1577,6 +1608,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'black_russian',
+    isFree: true,
     title: { id: 'Black Russian', en: 'Black Russian' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -1671,6 +1703,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'godmother-r',
+    isFree: true,
     title: { id: 'Godmother', en: 'Godmother' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -1689,6 +1722,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'godfather-r',
+    isFree: true,
     title: { id: 'Godfather', en: 'Godfather' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -1774,6 +1808,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'screwdriver-r',
+    isFree: true,
     title: { id: 'Screwdriver', en: 'Screwdriver' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -1841,6 +1876,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'white_russian',
+    isFree: true,
     title: { id: 'White Russian', en: 'White Russian' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -2040,6 +2076,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'bellini-r',
+    isFree: true,
     title: { id: 'Bellini', en: 'Bellini' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -2099,6 +2136,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'kir',
+    isFree: true,
     title: { id: 'Kir', en: 'Kir' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -2116,6 +2154,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'kir_royale',
+    isFree: true,
     title: { id: 'Kir Royale', en: 'Kir Royale' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -2133,6 +2172,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'mimosa-r',
+    isFree: true,
     title: { id: 'Mimosa', en: 'Mimosa' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -2343,6 +2383,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'jager_bomb',
+    isFree: true,
     title: { id: 'Jägerbomb', en: 'Jägerbomb' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -2361,6 +2402,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'jack_coke',
+    isFree: true,
     title: { id: 'Jack and Coke', en: 'Jack and Coke' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -2400,6 +2442,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'irish_car_bomb',
+    isFree: true,
     title: { id: 'Irish Car Bomb', en: 'Irish Car Bomb' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -2465,6 +2508,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'incredible_hulk',
+    isFree: true,
     title: { id: 'Incredible Hulk', en: 'Incredible Hulk' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -2593,6 +2637,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'lemon_drop',
+    isFree: true,
     title: { id: 'Lemon Drop', en: 'Lemon Drop' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -2726,6 +2771,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'jagertee',
+    isFree: true,
     title: { id: 'Jagertee', en: 'Jagertee' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }],
@@ -2790,6 +2836,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'brave_bull',
+    isFree: true,
     title: { id: 'Brave Bull', en: 'Brave Bull' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -2809,6 +2856,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'chupacabra',
+    isFree: true,
     title: { id: 'Chupacabra', en: 'Chupacabra' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -2826,6 +2874,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'tequila_slammer',
+    isFree: true,
     title: { id: 'Tequila Slammer', en: 'Tequila Slammer' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -2910,6 +2959,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'gin_tonic',
+    isFree: true,
     title: { id: 'Gin Tonic', en: 'Gin Tonic' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -2975,6 +3025,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'death_in_the_afternoon',
+    isFree: true,
     title: { id: 'Death In The Afternoon', en: 'Death In The Afternoon' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -3301,6 +3352,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'barbarella',
+    isFree: true,
     title: { id: 'Barbarella', en: 'Barbarella' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -3379,6 +3431,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'sambuca',
+    isFree: true,
     title: { id: 'Sambuca', en: 'Sambuca' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -3420,6 +3473,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'amaretto_sour',
+    isFree: true,
     title: { id: 'Amaretto Sour', en: 'Amaretto Sour' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -3656,6 +3710,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'tintoretto',
+    isFree: true,
     title: { id: 'Tintoretto', en: 'Tintoretto' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -3714,6 +3769,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'highball',
+    isFree: true,
     title: { id: 'Highball', en: 'Highball' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -3780,6 +3836,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'mugslide',
+    isFree: true,
     title: { id: 'Mudslide', en: 'Mudslide' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -3906,6 +3963,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'clover_club',
+    isFree: true,
     title: { id: 'Clover Club', en: 'Clover Club' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -4173,6 +4231,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'moscow_mule',
+    isFree: true,
     title: { id: 'Moscow Mule', en: 'Moscow Mule' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -4285,6 +4344,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'espresso_martini',
+    isFree: true,
     title: { id: 'Martini Espresso', en: 'Martini Espresso' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -4697,6 +4757,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'vegas_bomb',
+    isFree: true,
     title: { id: 'Vegas Bomb', en: 'Vegas Bomb' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -4765,6 +4826,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'chocolate_martini',
+    isFree: true,
     title: { id: 'Martini Chocolate', en: 'Martini Chocolate' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -4786,6 +4848,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'blue_kamikaze',
+    isFree: true,
     title: { id: 'Blue Kamikaze', en: 'Blue Kamikaze' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }, { id: 'shot', en: 'shooter' }],
@@ -4806,6 +4869,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'liquid_cocaine',
+    isFree: true,
     title: { id: 'Liquid Cocaine', en: 'Liquid Cocaine' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }, { id: 'shot', en: 'shooter' }],
@@ -4826,6 +4890,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'redheaded_slut',
+    isFree: true,
     title: { id: 'Redheaded slut', en: 'Redheaded slut' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }, { id: 'shot', en: 'shooter' }],
@@ -4846,6 +4911,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'anaconda',
+    isFree: true,
     title: { id: 'Anaconda', en: 'Anaconda' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }, { id: 'shot', en: 'shooter' }],
@@ -4865,6 +4931,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'fireball',
+    isFree: true,
     title: { id: 'Fireball', en: 'Fireball' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }, { id: 'shot', en: 'shooter' }],
@@ -4885,6 +4952,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'gladiator',
+    isFree: true,
     title: { id: 'Gladiator', en: 'Gladiator' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'shot', en: 'shooter' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -5001,6 +5069,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'horny_bull_long',
+    isFree: true,
     title: { id: 'Horny Bull (long)', en: 'Horny Bull (long)' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -5020,6 +5089,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'horny_bull_shot',
+    isFree: true,
     title: { id: 'Horny Bull (shot)', en: 'Horny Bull (shot)' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }, { id: 'shot', en: 'shooter' }],
@@ -5417,6 +5487,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'shirley_temple',
+    isFree: true,
     title: { id: 'Shirley Temple', en: 'Shirley Temple' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'non-alcoholic' }],
@@ -5462,6 +5533,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'hot_toddy',
+    isFree: true,
     title: { id: 'Hot Toddy', en: 'Hot Toddy' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -5538,6 +5610,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'snowball',
+    isFree: true,
     title: { id: 'Snowball', en: 'Snowball' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -5753,6 +5826,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'yorsh',
+    isFree: true,
     title: { id: 'Yorsh', en: 'Yorsh' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -5794,6 +5868,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'malibu_bay_breeze',
+    isFree: true,
     title: { id: 'Malibu Bay Breeze', en: 'Malibu Bay Breeze' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -5876,6 +5951,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'roy_rogers',
+    isFree: true,
     title: { id: 'Roy Rogers', en: 'Roy Rogers' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'non-alcoholic' }],
@@ -6150,6 +6226,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'b_b',
+    isFree: true,
     title: { id: 'B&B', en: 'B&B' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -6216,6 +6293,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'boulevardier-r',
+    isFree: true,
     title: { id: 'Boulevardier', en: 'Boulevardier' },
     category: 'Cocktail',
     tags: [{ id: 'kuat', en: 'strong' }],
@@ -6518,6 +6596,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'hazelnut_martini',
+    isFree: true,
     title: { id: 'Hazelnut Martini', en: 'Hazelnut Martini' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -6961,6 +7040,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'boilermaker',
+    isFree: true,
     title: { id: 'Boilermaker', en: 'Boilermaker' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }],
@@ -7518,6 +7598,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'fernandito',
+    isFree: true,
     title: { id: 'Fernandito', en: 'Fernandito' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -8509,6 +8590,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'gingerbread_martini',
+    isFree: true,
     title: { id: 'Gingerbread Martini', en: 'Gingerbread Martini' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'mild' }],
@@ -8529,6 +8611,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'cranberry_ginger_mimosa',
+    isFree: true,
     title: { id: 'Cranberry Ginger Mimosa', en: 'Cranberry Ginger Mimosa' },
     category: 'Cocktail',
     tags: [{ id: 'ringan', en: 'light' }, { id: 'minuman panjang', en: 'long drink' }],
@@ -9267,6 +9350,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-teh-kekinian',
+    isFree: true,
     title: { id: 'Es Teh Kekinian', en: 'Iced Sweet Tea Kekinian' },
     category: 'Minuman Kekinian',
     tags: [{ id: 'kekinian', en: 'kekinian' }, { id: 'teh', en: 'teh' }],
@@ -9285,6 +9369,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-thai-tea',
+    isFree: true,
     title: { id: 'Es Thai Tea', en: 'Iced Thai Tea' },
     category: 'Minuman Kekinian',
     tags: [{ id: 'kekinian', en: 'kekinian' }, { id: 'teh', en: 'teh' }],
@@ -9304,6 +9389,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-matcha-latte',
+    isFree: true,
     title: { id: 'Es Matcha Latte', en: 'Iced Matcha Latte' },
     category: 'Minuman Kekinian',
     tags: [{ id: 'kekinian', en: 'kekinian' }, { id: 'teh hijau', en: 'teh hijau' }],
@@ -9323,6 +9409,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-taro-latte',
+    isFree: true,
     title: { id: 'Es Taro Latte', en: 'Iced Taro Latte' },
     category: 'Minuman Kekinian',
     tags: [{ id: 'kekinian', en: 'kekinian' }, { id: 'creamy', en: 'creamy' }],
@@ -9603,6 +9690,7 @@ export const RECIPES: Recipe[] = [
   // --- Batch 3: Mocktail & Minuman Kekinian (persiapan launch) ---
   {
     id: 'virgin-mule',
+    isFree: true,
     title: { id: 'Virgin Mule', en: 'Virgin Mule' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'pedas', en: 'pedas' }],
@@ -9638,6 +9726,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'sparkling-grape-cooler',
+    isFree: true,
     title: { id: 'Sparkling Grape Cooler', en: 'Sparkling Grape Cooler' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'segar', en: 'segar' }],
@@ -9673,6 +9762,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'lavender-lemonade',
+    isFree: true,
     title: { id: 'Lavender Lemonade', en: 'Lavender Lemonade' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'harum', en: 'harum' }],
@@ -9708,6 +9798,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'peach-bellini-mocktail',
+    isFree: true,
     title: { id: 'Peach Bellini Mocktail', en: 'Peach Bellini Mocktail' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'buah', en: 'buah' }],
@@ -9782,6 +9873,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'coconut-pineapple-mocktail',
+    isFree: true,
     title: { id: 'Coconut Pineapple Mocktail', en: 'Coconut Pineapple Mocktail' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'tropis', en: 'tropis' }],
@@ -9854,6 +9946,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'papaya-colada',
+    isFree: true,
     title: { id: 'Papaya Colada', en: 'Papaya Colada' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'tropis', en: 'tropis' }],
@@ -9929,6 +10022,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'tamarind-cooler',
+    isFree: true,
     title: { id: 'Tamarind Cooler', en: 'Tamarind Cooler' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'asam manis', en: 'asam manis' }],
@@ -10076,6 +10170,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'sparkling-elderflower-lemonade',
+    isFree: true,
     title: { id: 'Sparkling Elderflower Lemonade', en: 'Sparkling Elderflower Lemonade' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'segar', en: 'segar' }],
@@ -10130,6 +10225,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'virgin-sangria',
+    isFree: true,
     title: { id: 'Virgin Sangria', en: 'Virgin Sangria' },
     category: 'Mocktail',
     tags: [{ id: 'tanpa alkohol', en: 'tanpa alkohol' }, { id: 'buah', en: 'buah' }],
@@ -10263,6 +10359,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-yakult-soda',
+    isFree: true,
     title: { id: 'Es Yakult Soda', en: 'Iced Yakult Soda' },
     category: 'Minuman Kekinian',
     tags: [{ id: 'kekinian', en: 'kekinian' }, { id: 'segar', en: 'segar' }],
@@ -10373,6 +10470,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-jeruk-peras-kekinian',
+    isFree: true,
     title: { id: 'Es Jeruk Peras Kekinian', en: 'Iced Fresh Orange Squeeze' },
     category: 'Minuman Kekinian',
     tags: [{ id: 'kekinian', en: 'kekinian' }, { id: 'segar', en: 'segar' }],
@@ -10408,6 +10506,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-susu-pandan',
+    isFree: true,
     title: { id: 'Es Susu Pandan', en: 'Iced Pandan Milk' },
     category: 'Minuman Kekinian',
     tags: [{ id: 'kekinian', en: 'kekinian' }, { id: 'tradisional modern', en: 'tradisional modern' }],
@@ -10443,6 +10542,7 @@ export const RECIPES: Recipe[] = [
   },
   {
     id: 'es-markisa-susu',
+    isFree: true,
     title: { id: 'Es Markisa Susu', en: 'Iced Passion Fruit Milk' },
     category: 'Minuman Kekinian',
     tags: [{ id: 'kekinian', en: 'kekinian' }, { id: 'buah', en: 'buah' }],

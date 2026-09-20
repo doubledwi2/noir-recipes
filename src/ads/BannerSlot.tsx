@@ -7,6 +7,7 @@ import { BANNER_AD_UNIT_ID } from './adUnits';
 import { AdsModule } from './adsModule';
 import { AdErrorBoundary } from './AdErrorBoundary';
 import { useI18n } from '../i18n/useI18n';
+import { useSubscription } from '../subscription/SubscriptionContext';
 
 const BANNER_BORDER_WIDTH = 1;
 
@@ -31,6 +32,8 @@ function UnsupportedPlaceholder() {
 // that navigator, such as recipe detail, can render their own single slot.
 export function BannerSlot() {
   const { width } = useWindowDimensions();
+  const { isPro } = useSubscription();
+  if (isPro) return null;
   if (!AdsModule) return <UnsupportedPlaceholder />;
 
   const { BannerAd, BannerAdSize } = AdsModule;

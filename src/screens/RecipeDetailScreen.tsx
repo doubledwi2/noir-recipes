@@ -13,6 +13,7 @@ import { IngredientRow } from '../components/IngredientRow';
 import { EmptyState } from '../components/EmptyState';
 import { useFavorites } from '../context/FavoritesContext';
 import { useMyBar } from '../context/MyBarContext';
+import { useSubscription } from '../subscription/SubscriptionContext';
 import { CATEGORY_LABELS, GLASS_TYPE_LABELS, DIFFICULTY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
 import { BannerSlot } from '../ads/BannerSlot';
@@ -27,6 +28,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   const router = useRouter();
   const { isFavorite, toggleFavorite } = useFavorites();
   const { hasIngredient } = useMyBar();
+  const { isPro } = useSubscription();
   const { t, strings } = useI18n();
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
@@ -70,6 +72,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
   }
 
   const fav = isFavorite(recipe.id);
+  const isLocked = !recipe.isFree && !isPro;
   const stats = [
     { label: t(GLASS_TYPE_LABELS[recipe.glassType]), icon: 'wine-outline' as const },
     { label: t(DIFFICULTY_LABELS[recipe.difficulty]), icon: 'sparkles-outline' as const },
@@ -131,57 +134,71 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: string }) {
           </Text>
         </TouchableOpacity>
 
-        {/* Ingredients */}
-        <Section title={strings.detail.ingredientsTitle}>
-          <View style={styles.ingredientsCard}>
-            {recipe.ingredients.map((item, idx) => {
-              const ingredient = INGREDIENT_MAP[item.ingredientId];
-              return (
-                <View key={`${item.ingredientId}-${idx}`}>
-                  <IngredientRow
-                    name={ingredient ? t(ingredient.name) : item.ingredientId}
-                    amount={t(item.amount)}
-                    owned={hasIngredient(item.ingredientId)}
-                  />
-                  {idx < recipe.ingredients.length - 1 && <View style={styles.ingredientSeparator} />}
-                </View>
-              );
-            })}
-          </View>
-        </Section>
-
-        {/* Steps */}
-        <Section title={strings.detail.stepsTitle}>
-          {recipe.steps.map((step, index) => {
-            const isCompleted = completedSteps.has(index);
-            return (
-              <TouchableOpacity
-                key={index}
-                style={styles.stepRow}
-                onPress={() => toggleStep(index)}
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked: isCompleted }}
-                accessibilityLabel={t(step)}
-                activeOpacity={0.7}
-              >
-                <View style={[styles.stepNumber, isCompleted && styles.stepNumberCompleted]}>
-                  <Text style={[styles.stepNumberText, isCompleted && styles.stepNumberTextCompleted]}>
-                    {isCompleted ? '✓' : index + 1}
-                  </Text>
-                </View>
-                <Text style={[styles.stepText, isCompleted && styles.stepTextCompleted]}>{t(step)}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </Section>
-
-        {/* Notes */}
-        {recipe.notes && (
-          <Section title={strings.detail.notesTitle}>
-            <View style={styles.notesCard}>
-              <Text style={styles.notesText}>{t(recipe.notes)}</Text>
+        {isLocked ? (
+          <View style={styles.paywallCard}>
+            <View style={styles.paywallIconWrap}>
+              <Ionicons name="lock-closed" size={22} color={colors.gold} />
             </View>
-          </Section>
+            <Text style={styles.paywallTitle}>{strings.paywall.recipeLockedTitle}</Text>
+            <Text style={styles.paywallBody}>{strings.paywall.recipeLockedBody}</Text>
+            <View style={styles.paywallDivider} />
+            <Text style={styles.paywallNotice}>{strings.paywall.comingSoon}</Text>
+          </View>
+        ) : (
+          <>
+            {/* Ingredients */}
+            <Section title={strings.detail.ingredientsTitle}>
+              <View style={styles.ingredientsCard}>
+                {recipe.ingredients.map((item, idx) => {
+                  const ingredient = INGREDIENT_MAP[item.ingredientId];
+                  return (
+                    <View key={`${item.ingredientId}-${idx}`}>
+                      <IngredientRow
+                        name={ingredient ? t(ingredient.name) : item.ingredientId}
+                        amount={t(item.amount)}
+                        owned={hasIngredient(item.ingredientId)}
+                      />
+                      {idx < recipe.ingredients.length - 1 && <View style={styles.ingredientSeparator} />}
+                    </View>
+                  );
+                })}
+              </View>
+            </Section>
+
+            {/* Steps */}
+            <Section title={strings.detail.stepsTitle}>
+              {recipe.steps.map((step, index) => {
+                const isCompleted = completedSteps.has(index);
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.stepRow}
+                    onPress={() => toggleStep(index)}
+                    accessibilityRole="checkbox"
+                    accessibilityState={{ checked: isCompleted }}
+                    accessibilityLabel={t(step)}
+                    activeOpacity={0.7}
+                  >
+                    <View style={[styles.stepNumber, isCompleted && styles.stepNumberCompleted]}>
+                      <Text style={[styles.stepNumberText, isCompleted && styles.stepNumberTextCompleted]}>
+                        {isCompleted ? '✓' : index + 1}
+                      </Text>
+                    </View>
+                    <Text style={[styles.stepText, isCompleted && styles.stepTextCompleted]}>{t(step)}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </Section>
+
+            {/* Notes */}
+            {recipe.notes && (
+              <Section title={strings.detail.notesTitle}>
+                <View style={styles.notesCard}>
+                  <Text style={styles.notesText}>{t(recipe.notes)}</Text>
+                </View>
+              </Section>
+            )}
+          </>
         )}
 
         <View style={styles.detailAd}>
@@ -304,5 +321,37 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   notesText: { color: colors.textSecondary, fontSize: 13, lineHeight: 20, fontStyle: 'italic' },
+  paywallCard: {
+    marginTop: spacing.xxl,
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.goldOverlay15,
+    padding: spacing.xl,
+  },
+  paywallIconWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.gold,
+    backgroundColor: colors.goldOverlay12,
+    marginBottom: spacing.md,
+    ...shadows.goldGlow,
+  },
+  paywallTitle: { ...typography.h2, color: colors.textPrimary, textAlign: 'center' },
+  paywallBody: {
+    ...typography.body,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: spacing.xs + 2,
+    letterSpacing: 0,
+    lineHeight: 20,
+  },
+  paywallDivider: { width: 40, height: 1, backgroundColor: colors.border, marginVertical: spacing.md },
+  paywallNotice: { ...typography.small, color: colors.textMuted, letterSpacing: 0, textAlign: 'center' },
   detailAd: { marginTop: spacing.xxl },
 });

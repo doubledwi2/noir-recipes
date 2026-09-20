@@ -20,6 +20,7 @@ import { MyBarProvider } from '../src/context/MyBarContext';
 import { InterstitialProvider } from '../src/ads/InterstitialProvider';
 import { AdsModule } from '../src/ads/adsModule';
 import { LocaleProvider } from '../src/i18n/LocaleContext';
+import { SubscriptionProvider } from '../src/subscription/SubscriptionContext';
 import { colors } from '../src/theme/colors';
 import { LoadingScreen } from '../src/components/LoadingScreen';
 
@@ -59,27 +60,29 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider onLayout={onLayoutRootView}>
       <LocaleProvider>
-        <FavoritesProvider>
-          <MyBarProvider>
-            <InterstitialProvider>
-              <StatusBar style="light" />
-              <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen
-                  name="recipe/[id]"
-                  options={{
-                    headerShown: false,
-                    headerTitle: '',
-                    headerTransparent: true,
-                    headerTintColor: colors.textPrimary,
-                    animation: 'slide_from_bottom',
-                  }}
-                />
-              </Stack>
-              {showIntro && <LoadingScreen onFinish={() => setShowIntro(false)} />}
-            </InterstitialProvider>
-          </MyBarProvider>
-        </FavoritesProvider>
+        <SubscriptionProvider>
+          <FavoritesProvider>
+            <MyBarProvider>
+              <InterstitialProvider>
+                <StatusBar style="light" />
+                <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+                  <Stack.Screen name="(tabs)" />
+                  <Stack.Screen
+                    name="recipe/[id]"
+                    options={{
+                      headerShown: false,
+                      headerTitle: '',
+                      headerTransparent: true,
+                      headerTintColor: colors.textPrimary,
+                      animation: 'slide_from_bottom',
+                    }}
+                  />
+                </Stack>
+                {showIntro && <LoadingScreen onFinish={() => setShowIntro(false)} />}
+              </InterstitialProvider>
+            </MyBarProvider>
+          </FavoritesProvider>
+        </SubscriptionProvider>
       </LocaleProvider>
     </SafeAreaProvider>
   );

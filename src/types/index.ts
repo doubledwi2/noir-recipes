@@ -81,4 +81,7 @@ export interface Recipe {
   imageUrl?: string;
   // Optional bartender's tip/caveat, shown below the steps when present.
   notes?: LocalizedText;
+  // Part of the free tier (100 of 498 recipes). Undefined/false means the
+  // recipe is Pro-only -- gated behind an active subscription.
+  isFree?: boolean;
 }

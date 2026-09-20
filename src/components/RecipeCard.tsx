@@ -6,6 +6,7 @@ import { colors } from '../theme/colors';
 import { radius, spacing, typography } from '../theme/spacing';
 import { CATEGORY_LABELS, DIFFICULTY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
+import { useSubscription } from '../subscription/SubscriptionContext';
 import { FavoriteButton } from './FavoriteButton';
 
 interface Props {
@@ -22,6 +23,8 @@ interface Props {
 // top-right of the header row and fills gold (not red/wine) when active.
 export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note }: Props) {
   const { t, strings } = useI18n();
+  const { isPro } = useSubscription();
+  const isLocked = !recipe.isFree && !isPro;
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const entryOpacity = useRef(new Animated.Value(0)).current;
   const entryTranslateY = useRef(new Animated.Value(10)).current;
@@ -52,7 +55,15 @@ export function RecipeCard({ recipe, isFavorite, onPress, onToggleFavorite, note
       >
         <View style={styles.headerRow}>
           <View style={styles.titleBlock}>
-            <Text style={styles.category}>{t(CATEGORY_LABELS[recipe.category]).toUpperCase()}</Text>
+            <View style={styles.categoryRow}>
+              <Text style={styles.category}>{t(CATEGORY_LABELS[recipe.category]).toUpperCase()}</Text>
+              {isLocked ? (
+                <View style={styles.proBadge}>
+                  <Ionicons name="lock-closed" size={9} color={colors.primaryForeground} />
+                  <Text style={styles.proBadgeText}>{strings.paywall.recipeLockedBadge}</Text>
+                </View>
+              ) : null}
+            </View>
             <Text style={styles.title} numberOfLines={2}>
               {t(recipe.title)}
             </Text>
@@ -99,7 +110,23 @@ const styles = StyleSheet.create({
   },
   headerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
   titleBlock: { flex: 1, minWidth: 0 },
+  categoryRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   category: { ...typography.goldLabel, color: colors.gold, opacity: 0.8 },
+  proBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    backgroundColor: colors.gold,
+    borderRadius: radius.sm,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+  },
+  proBadgeText: {
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: colors.primaryForeground,
+  },
   title: {
     ...typography.h2,
     color: colors.textPrimary,

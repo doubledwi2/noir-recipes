@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Alert } from 'react-native';
 import { favoritesStorage } from '../utils/storage';
+import { useSubscription } from '../subscription/SubscriptionContext';
+import { useI18n } from '../i18n/useI18n';
+
+export const FREE_FAVORITES_LIMIT = 10;
 
 interface FavoritesContextValue {
   favoriteIds: Set<string>;
@@ -14,6 +19,8 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [isLoaded, setIsLoaded] = useState(false);
   const hasLoadedRef = useRef(false);
+  const { isPro } = useSubscription();
+  const { strings } = useI18n();
 
   useEffect(() => {
     favoritesStorage.load().then((ids) => {
@@ -30,6 +37,11 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
 
   const toggleFavorite = (recipeId: string) => {
     setFavoriteIds((prev) => {
+      const isAdding = !prev.has(recipeId);
+      if (isAdding && !isPro && prev.size >= FREE_FAVORITES_LIMIT) {
+        Alert.alert(strings.paywall.favoritesLimitTitle, strings.paywall.favoritesLimitBody(FREE_FAVORITES_LIMIT));
+        return prev;
+      }
       const next = new Set(prev);
       if (next.has(recipeId)) {
         next.delete(recipeId);
@@ -47,7 +59,8 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       toggleFavorite,
       isLoaded,
     }),
-    [favoriteIds, isLoaded],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [favoriteIds, isLoaded, isPro],
   );
 
   return <FavoritesContext.Provider value={value}>{children}</FavoritesContext.Provider>;
