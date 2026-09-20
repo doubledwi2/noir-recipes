@@ -16,7 +16,7 @@ export function IngredientRow({ name, amount, owned }: Props) {
   return (
     <View style={styles.row}>
       <View style={[styles.dot, owned && styles.dotOwned]} />
-      <Text style={[styles.name, owned && styles.nameOwned]} numberOfLines={1}>
+      <Text style={[styles.name, owned && styles.nameOwned]}>
         {name}
       </Text>
       <Text style={styles.amount}>{amount}</Text>
@@ -32,15 +32,15 @@ const styles = StyleSheet.create({
     gap: spacing.sm + 2,
   },
   dot: {
-    width: 8,
-    height: 8,
+    width: 6,
+    height: 6,
     borderRadius: 4,
     backgroundColor: colors.textMuted,
   },
   dotOwned: {
     backgroundColor: colors.gold,
   },
-  name: { flex: 1, ...typography.body, color: colors.textSecondary, fontWeight: '600' },
+  name: { flex: 1, ...typography.body, color: colors.textPrimary },
   nameOwned: { color: colors.textPrimary },
   amount: { ...typography.caption, color: colors.gold, letterSpacing: 0 },
 });

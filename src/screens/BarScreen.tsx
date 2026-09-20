@@ -28,7 +28,7 @@ export function BarScreen() {
     () =>
       INGREDIENT_TYPES.map((type) => ({
         title: t(INGREDIENT_TYPE_LABELS[type]),
-        data: chunkPairs(INGREDIENTS.filter((ingredient) => ingredient.type === type)),
+        data: chunkPairs(INGREDIENTS.filter((ingredient) => ingredient.type === type && !ingredient.alwaysAvailable)),
       })).filter((section) => section.data.length > 0),
     [t],
   );
@@ -47,7 +47,10 @@ export function BarScreen() {
               title={strings.bar.title}
               subtitle={strings.bar.tagline(ownedIngredientIds.size)}
             />
-            <Pressable onPress={() => router.push('/can-make')} style={styles.cta}>
+            <Pressable
+              onPress={() => router.push('/can-make')}
+              style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
+            >
               <Text style={styles.ctaText}>{strings.bar.cta}</Text>
               <Ionicons name="arrow-forward" size={16} color={colors.gold} />
             </Pressable>
@@ -97,6 +100,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   ctaText: { ...typography.bodyStrong, color: colors.gold },
+  ctaPressed: { opacity: 0.86, transform: [{ scale: 0.99 }] },
   sectionTitle: {
     ...typography.h2,
     color: colors.textPrimary,

@@ -77,6 +77,14 @@ export interface Strings {
     proCta: string;
     proNotice: string;
   };
+  paywall: {
+    favoritesLimitTitle: string;
+    favoritesLimitBody: (limit: number) => string;
+    recipeLockedBadge: string;
+    recipeLockedTitle: string;
+    recipeLockedBody: string;
+    comingSoon: string;
+  };
 }
 
 export const UI_STRINGS: Record<Locale, Strings> = {
@@ -157,6 +165,16 @@ export const UI_STRINGS: Record<Locale, Strings> = {
       proCta: 'Upgrade ke Pro',
       proNotice: 'Pembayaran Pro akan segera tersedia.',
     },
+    paywall: {
+      favoritesLimitTitle: 'Batas favorit tercapai',
+      favoritesLimitBody: (limit) =>
+        `Versi gratis bisa menyimpan sampai ${limit} favorit. Upgrade ke Pro untuk favorit tanpa batas.`,
+      recipeLockedBadge: 'PRO',
+      recipeLockedTitle: 'Resep khusus Pro',
+      recipeLockedBody:
+        'Resep ini termasuk dalam 398 resep Pro. Upgrade untuk membuka semua 498 resep, favorit tanpa batas, dan bebas iklan.',
+      comingSoon: 'Pembayaran Pro akan segera tersedia.',
+    },
   },
   en: {
     common: {
@@ -234,6 +252,16 @@ export const UI_STRINGS: Record<Locale, Strings> = {
       proBody: 'Enjoy every recipe without ad banner interruptions.',
       proCta: 'Upgrade to Pro',
       proNotice: 'Pro payments will be available soon.',
+    },
+    paywall: {
+      favoritesLimitTitle: 'Favorites limit reached',
+      favoritesLimitBody: (limit) =>
+        `The free tier can save up to ${limit} favorites. Upgrade to Pro for unlimited favorites.`,
+      recipeLockedBadge: 'PRO',
+      recipeLockedTitle: 'Pro-only recipe',
+      recipeLockedBody:
+        'This recipe is part of the 398 Pro recipes. Upgrade to unlock all 498 recipes, unlimited favorites, and an ad-free experience.',
+      comingSoon: 'Pro payments will be available soon.',
     },
   },
 };

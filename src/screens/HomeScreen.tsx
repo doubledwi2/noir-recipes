@@ -3,7 +3,7 @@ import { Animated, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { RECIPES, CATEGORIES } from '../data/recipes';
-import type { RecipeCategory } from '../types';
+import type { Recipe, RecipeCategory } from '../types';
 import { colors } from '../theme/colors';
 import { spacing, typography } from '../theme/spacing';
 import { SearchBar } from '../components/SearchBar';
@@ -16,6 +16,18 @@ import { useOpenRecipe } from '../ads/InterstitialProvider';
 import { recipeMatchesQuery } from '../utils/search';
 import { CATEGORY_LABELS } from '../i18n/labels';
 import { useI18n } from '../i18n/useI18n';
+
+const ORIGINAL_RECIPE_INDEX = new Map(RECIPES.map((recipe, index) => [recipe.id, index]));
+
+function compareHomePopularity(a: Recipe, b: Recipe): number {
+  if (a.popularityScore !== b.popularityScore) {
+    if (a.popularityScore === undefined) return 1;
+    if (b.popularityScore === undefined) return -1;
+    return b.popularityScore - a.popularityScore;
+  }
+
+  return (ORIGINAL_RECIPE_INDEX.get(a.id) ?? 0) - (ORIGINAL_RECIPE_INDEX.get(b.id) ?? 0);
+}
 
 // Ad banner is now rendered once, globally, floating above the tab bar
 // on every screen -- see app/(tabs)/_layout.tsx. Don't add <BannerSlot />
@@ -35,52 +47,63 @@ export function HomeScreen() {
   }, []);
 
   const filteredRecipes = useMemo(() => {
-    return RECIPES.filter((recipe) => {
+    const filtered = RECIPES.filter((recipe) => {
       if (category && recipe.category !== category) return false;
       return recipeMatchesQuery(recipe, query, locale);
     });
+
+    return [...filtered].sort(compareHomePopularity);
   }, [query, category, locale]);
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
-      <Animated.View style={[styles.header, { opacity: headerFade }]}>
-        <BrandLogo />
-        <Text style={styles.subtitle}>{strings.home.tagline}</Text>
-        <LinearGradient
-          colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.divider}
-        />
-      </Animated.View>
-
-      <View style={styles.searchWrap}>
-        <SearchBar value={query} onChangeText={setQuery} placeholder={strings.home.searchPlaceholder} />
-      </View>
-
-      <CategoryTabs
-        options={CATEGORIES}
-        getLabel={(option) => t(CATEGORY_LABELS[option])}
-        allLabel={strings.common.all}
-        value={category}
-        onChange={setCategory}
-      />
-
       <FlatList
+        keyboardShouldPersistTaps="handled"
         data={filteredRecipes}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <RecipeCard
-            recipe={item}
-            isFavorite={isFavorite(item.id)}
-            onPress={() => openRecipe(item.id)}
-            onToggleFavorite={() => toggleFavorite(item.id)}
-          />
+          <View style={styles.listItem}>
+            <RecipeCard
+              recipe={item}
+              isFavorite={isFavorite(item.id)}
+              onPress={() => openRecipe(item.id)}
+              onToggleFavorite={() => toggleFavorite(item.id)}
+            />
+          </View>
         )}
         ItemSeparatorComponent={() => <View style={{ height: spacing.md }} />}
+        ListHeaderComponent={
+          <>
+            <Animated.View style={[styles.header, { opacity: headerFade }]}>
+              <BrandLogo />
+              <Text style={styles.subtitle}>{strings.home.tagline}</Text>
+              <LinearGradient
+                colors={[colors.goldMuted, colors.goldLight, colors.goldMuted]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.divider}
+              />
+            </Animated.View>
+
+            <View style={styles.searchWrap}>
+              <SearchBar value={query} onChangeText={setQuery} placeholder={strings.home.searchPlaceholder} />
+            </View>
+
+            <CategoryTabs
+              options={CATEGORIES}
+              getLabel={(option) => t(CATEGORY_LABELS[option])}
+              allLabel={strings.common.all}
+              value={category}
+              onChange={setCategory}
+            />
+            <View style={styles.listHeaderSpacing} />
+          </>
+        }
         ListEmptyComponent={
-          <EmptyState emoji="🍹" title={strings.home.emptyTitle} subtitle={strings.home.emptySubtitle} />
+          <View style={styles.listItem}>
+            <EmptyState emoji="🍹" title={strings.home.emptyTitle} subtitle={strings.home.emptySubtitle} />
+          </View>
         }
         showsVerticalScrollIndicator={false}
       />
@@ -92,15 +115,15 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   header: {
     paddingHorizontal: spacing.screen,
-    paddingTop: spacing.xl,
+    paddingTop: spacing.xxl,
     paddingBottom: spacing.sm,
     alignItems: 'center',
   },
   subtitle: {
-    ...typography.caption,
+    ...typography.body,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginTop: spacing.sm,
+    marginTop: spacing.md,
   },
   divider: {
     height: 1,
@@ -110,13 +133,13 @@ const styles = StyleSheet.create({
   },
   searchWrap: {
     paddingHorizontal: spacing.screen,
-    marginTop: spacing.md,
-    marginBottom: spacing.sm,
+    marginTop: spacing.screen,
+    marginBottom: spacing.md,
   },
   listContent: {
-    paddingHorizontal: spacing.screen,
-    paddingTop: spacing.lg,
     paddingBottom: spacing.xxxl,
     flexGrow: 1,
   },
+  listItem: { paddingHorizontal: spacing.screen },
+  listHeaderSpacing: { height: spacing.screen },
 });

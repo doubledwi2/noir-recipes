@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -20,7 +20,9 @@ import { MyBarProvider } from '../src/context/MyBarContext';
 import { InterstitialProvider } from '../src/ads/InterstitialProvider';
 import { AdsModule } from '../src/ads/adsModule';
 import { LocaleProvider } from '../src/i18n/LocaleContext';
+import { SubscriptionProvider } from '../src/subscription/SubscriptionContext';
 import { colors } from '../src/theme/colors';
+import { LoadingScreen } from '../src/components/LoadingScreen';
 
 // Keep the native splash screen up until both font families finish loading,
 // so there's no flash of the wrong font (serif titles briefly in system
@@ -28,6 +30,8 @@ import { colors } from '../src/theme/colors';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
+  const [showIntro, setShowIntro] = useState(true);
+
   useEffect(() => {
     if (!AdsModule) return;
     AdsModule.default()
@@ -56,26 +60,29 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider onLayout={onLayoutRootView}>
       <LocaleProvider>
-        <FavoritesProvider>
-          <MyBarProvider>
-            <InterstitialProvider>
-              <StatusBar style="light" />
-              <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen
-                  name="recipe/[id]"
-                  options={{
-                    headerShown: true,
-                    headerTitle: '',
-                    headerTransparent: true,
-                    headerTintColor: colors.textPrimary,
-                    animation: 'slide_from_bottom',
-                  }}
-                />
-              </Stack>
-            </InterstitialProvider>
-          </MyBarProvider>
-        </FavoritesProvider>
+        <SubscriptionProvider>
+          <FavoritesProvider>
+            <MyBarProvider>
+              <InterstitialProvider>
+                <StatusBar style="light" />
+                <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+                  <Stack.Screen name="(tabs)" />
+                  <Stack.Screen
+                    name="recipe/[id]"
+                    options={{
+                      headerShown: false,
+                      headerTitle: '',
+                      headerTransparent: true,
+                      headerTintColor: colors.textPrimary,
+                      animation: 'slide_from_bottom',
+                    }}
+                  />
+                </Stack>
+                {showIntro && <LoadingScreen onFinish={() => setShowIntro(false)} />}
+              </InterstitialProvider>
+            </MyBarProvider>
+          </FavoritesProvider>
+        </SubscriptionProvider>
       </LocaleProvider>
     </SafeAreaProvider>
   );

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { INTERSTITIAL_AD_UNIT_ID } from './adUnits';
 import { AdsModule } from './adsModule';
+import { useSubscription } from '../subscription/SubscriptionContext';
 
 interface RecipeInterstitial {
   showThenContinue: (onDone: () => void) => void;
@@ -60,9 +61,17 @@ function useUnsupportedInterstitial(): RecipeInterstitial {
 /**
  * Preloads a test interstitial and shows it right before a recipe detail
  * screen opens. Falls back to calling `onDone` immediately if ads aren't
- * supported (Expo Go) or the ad isn't ready yet, so navigation is never
- * blocked by a slow/failed ad load.
+ * supported (Expo Go), the ad isn't ready yet, or the user is Pro (no ads
+ * at all), so navigation is never blocked by a slow/failed ad load.
+ *
+ * Both branches below are hooks, called unconditionally on every render (the
+ * `AdsModule` check is a fixed value for the app's lifetime, same as before
+ * this file gated on subscription status too) -- only the returned value
+ * differs based on `isPro`, which is safe under the rules of hooks.
  */
 export function useRecipeInterstitial(): RecipeInterstitial {
-  return AdsModule ? useSupportedInterstitial() : useUnsupportedInterstitial();
+  const { isPro } = useSubscription();
+  const adInterstitial = AdsModule ? useSupportedInterstitial() : useUnsupportedInterstitial();
+  const skipInterstitial = useUnsupportedInterstitial();
+  return isPro ? skipInterstitial : adInterstitial;
 }

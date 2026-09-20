@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 import { radius, spacing } from '../theme/spacing';
@@ -7,6 +7,9 @@ import { BANNER_AD_UNIT_ID } from './adUnits';
 import { AdsModule } from './adsModule';
 import { AdErrorBoundary } from './AdErrorBoundary';
 import { useI18n } from '../i18n/useI18n';
+import { useSubscription } from '../subscription/SubscriptionContext';
+
+const BANNER_BORDER_WIDTH = 1;
 
 // Expo Go can't load the AdMob native module, so we show a labeled
 // placeholder pill there instead -- styled to match the real Lovable
@@ -15,7 +18,7 @@ import { useI18n } from '../i18n/useI18n';
 function UnsupportedPlaceholder() {
   const { strings } = useI18n();
   return (
-    <View style={styles.placeholder}>
+    <View style={[styles.container, styles.placeholder]}>
       <View style={styles.labelChip}>
         <Text style={styles.labelChipText}>{strings.common.adLabel}</Text>
       </View>
@@ -25,20 +28,23 @@ function UnsupportedPlaceholder() {
   );
 }
 
-// Rendered once, globally, in app/(tabs)/_layout.tsx -- floats above the
-// tab bar on every screen. Don't render this inline inside individual
-// screens anymore.
+// Rendered globally for tab routes in app/(tabs)/_layout.tsx. Routes outside
+// that navigator, such as recipe detail, can render their own single slot.
 export function BannerSlot() {
+  const { width } = useWindowDimensions();
+  const { isPro } = useSubscription();
+  if (isPro) return null;
   if (!AdsModule) return <UnsupportedPlaceholder />;
 
   const { BannerAd, BannerAdSize } = AdsModule;
 
   return (
     <AdErrorBoundary>
-      <View style={styles.placeholder}>
+      <View style={styles.container}>
         <BannerAd
           unitId={BANNER_AD_UNIT_ID}
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          width={width - 2 * spacing.screen - 2 * BANNER_BORDER_WIDTH}
           requestOptions={{ requestNonPersonalizedAdsOnly: true }}
         />
       </View>
@@ -47,17 +53,20 @@ export function BannerSlot() {
 }
 
 const styles = StyleSheet.create({
-  placeholder: {
-    flexDirection: 'row',
+  container: {
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
-    height: 56,
+    minHeight: 56,
     borderRadius: radius.xl,
-    borderWidth: 1,
+    borderWidth: BANNER_BORDER_WIDTH,
     borderColor: colors.borderSubtle,
     backgroundColor: colors.bgElevated,
+  },
+  placeholder: {
+    flexDirection: 'row',
+    gap: spacing.sm,
     paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
   labelChip: {
     borderWidth: 1,
@@ -74,6 +83,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   placeholderText: {
+    flexShrink: 1,
     fontSize: 12,
     color: colors.textSecondary,
   },

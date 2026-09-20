@@ -19,6 +19,11 @@ export interface Ingredient {
   id: string;
   name: LocalizedText;
   type: IngredientType;
+  // Treated as always "owned" in Bar Saya / Bisa Dibuat matching regardless
+  // of what the user has actually marked -- for things like ice/water that
+  // are assumed to always be on hand and would otherwise make nearly every
+  // recipe show as incomplete.
+  alwaysAvailable?: boolean;
 }
 
 // The three launch categories. Adding a new one only requires extending this
@@ -43,7 +48,13 @@ export type GlassTypeId =
   | 'julep-cup'
   | 'mule-mug'
   | 'tiki'
-  | 'wine-glass';
+  | 'wine-glass'
+  // Added when merging in the 363-recipe research dataset.
+  | 'collins'
+  | 'margarita'
+  | 'snifter'
+  | 'pitcher'
+  | 'bowl';
 
 export interface RecipeIngredient {
   ingredientId: string;
@@ -61,10 +72,16 @@ export interface Recipe {
   glassType: GlassTypeId;
   difficulty: Difficulty;
   prepTimeMinutes: number;
+  // Local editorial ranking used only to order the Home catalog. This is a
+  // relative score, not a view count or externally sourced popularity claim.
+  popularityScore?: number;
   ingredients: RecipeIngredient[];
   steps: LocalizedText[];
   videoUrl?: string;
   imageUrl?: string;
   // Optional bartender's tip/caveat, shown below the steps when present.
   notes?: LocalizedText;
+  // Part of the free tier (100 of 498 recipes). Undefined/false means the
+  // recipe is Pro-only -- gated behind an active subscription.
+  isFree?: boolean;
 }

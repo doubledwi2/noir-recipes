@@ -13,24 +13,19 @@ import Constants, { AppOwnership } from 'expo-constants';
 // itulah yang bikin Expo Go crash sebelumnya meski sudah ada pengecekan if.
 export const ARE_ADS_SUPPORTED = Constants.appOwnership !== AppOwnership.Expo;
 
-// TODO(production): Belum ada akun AdMob produksi. Sebelum submit ke Play
-// Store, daftar aplikasi ini di AdMob lalu ganti dua ID di bawah (dan
-// androidAppId/iosAppId di app.json) dengan Ad Unit ID asli milikmu.
-//
-// Nilai di bawah ini adalah Test Ad Unit ID resmi dari Google (sama persis
-// dengan yang diekspor sebagai `TestIds.BANNER` / `TestIds.INTERSTITIAL` oleh
-// react-native-google-mobile-ads), ditulis langsung sebagai string supaya
-// file ini tidak perlu mengimpor package tersebut.
-// Referensi: https://developers.google.com/admob/android/test-ads
-//            https://developers.google.com/admob/ios/test-ads
+// Ad Unit ID produksi (Android) — akun AdMob asli "Noir Mix", terpasang
+// 13 Sep 2026. iOS belum ada app/ad unit di AdMob (belum ada rencana build
+// iOS), jadi nilai iOS masih sengaja dibiarkan Test Ad Unit ID resmi dari
+// Google supaya tidak pernah kepakai di produksi sebelum benar-benar disiapkan.
+// Referensi test ID: https://developers.google.com/admob/ios/test-ads
 export const BANNER_AD_UNIT_ID = Platform.select({
   ios: 'ca-app-pub-3940256099942544/2934735716',
-  android: 'ca-app-pub-3940256099942544/6300978111',
-  default: 'ca-app-pub-3940256099942544/6300978111',
+  android: 'ca-app-pub-4796059747594177/2822076168',
+  default: 'ca-app-pub-4796059747594177/2822076168',
 });
 
 export const INTERSTITIAL_AD_UNIT_ID = Platform.select({
   ios: 'ca-app-pub-3940256099942544/4411468910',
-  android: 'ca-app-pub-3940256099942544/1033173712',
-  default: 'ca-app-pub-3940256099942544/1033173712',
+  android: 'ca-app-pub-4796059747594177/5169037906',
+  default: 'ca-app-pub-4796059747594177/5169037906',
 });
